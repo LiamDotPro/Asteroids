@@ -2,10 +2,3 @@ language: node_js
 node_js:
 - stable
 script: npm test
-deploy:
-  provider: heroku
-  api_key:
-    secure: "RMGsYT/UcvF4GFLnavhF4QfdRK3IhWZMnss2f0cd1FUqjs/KdkoehxLQ4kXcJui4XUY8Tqh3o19Fti19ewU4WxPWBZtbdZ57QatobGTOnvaLw0yWELpjrZarNN9RyfSSRB54Oelb1JT8Ac42W4b3DIjnqYGpwH6lWgOlVeCIjUWUalgYw+XJI7rJQxGkpqw+6ZRd0FK4aJwS+k9d+SATEFc4vhuP9YOe2H+aPZeko+MWlrXBPufCTw8jsZX6+s+6/zbIn4wU9qqBue5ftDQ7nb8Mod5HYYi4da6j2ZquD0ocgMTf80T2DGwzEUEgy28G6YFcCadKc+ojAX9CffD2DPRKuJY2JYUFX+T8Y7c9qCRbIrVKsSKH9nO7HKbM1W+5xz7Q4waaLey+Q98KJadJrbnmFte41ZxggGP1AoaMnoeUizPMBB6P1HHdkib3ARZa+1yGcGNIG38FOESYAeobgNHZZ4kCF2KizUkWx4gtINfji9frkHEodc56n6qosrdV7kyJI2wtbn5SCcBeXQz4els5UH8ueybD097RL0eNA0b6dTlrqUj7MpnVxjwp3np9mHq0Nfj3ds5MQz8kuxpwuolTyzE4AqMqVGuagz2T+ia2AvwJYtFfkSqPdnFLetWprr6DZtidvt9LWhzL7LPxPHJcNNkUBXSyDoixs36XjUU="
-  app: Asteroids
-  on:
-    repo: LiamDotPro/Asteroids
