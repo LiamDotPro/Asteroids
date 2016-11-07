@@ -1,5 +1,5 @@
 {
-  "name": "skeletonapp",
+  "name": "",
   "version": "0.0.0",
   "description": "skeletonapp",
   "license": "BSD-3-Clause",
@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/LiamDotPro/Travis-CI-NodeJS-Skeleton-Mocha-Chai.git"
+    "url": "https://github.com/LiamDotPro/Asteroids.git"
   },
   "scripts": {
     "test": "mocha"
