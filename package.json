@@ -1,0 +1,23 @@
+{
+  "name": "skeletonapp",
+  "version": "0.0.0",
+  "description": "skeletonapp",
+  "license": "BSD-3-Clause",
+  "main": "index.js",
+  "author": {
+    "name": "li"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LiamDotPro/Travis-CI-NodeJS-Skeleton-Mocha-Chai.git"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "chai": "^3.5.0"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.0-2"
+  }
+}
