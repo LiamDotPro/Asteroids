@@ -1,5 +1,5 @@
 {
-  "name": "",
+  "name": "Asteroids",
   "version": "0.0.0",
   "description": "skeletonapp",
   "license": "BSD-3-Clause",
@@ -12,12 +12,14 @@
     "url": "https://github.com/LiamDotPro/Asteroids.git"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "mocha",
+    "coverage": "istanbul cover ./test.js"
   },
   "dependencies": {
     "chai": "^3.5.0"
   },
   "devDependencies": {
+    "istanbul": "^0.4.5",
     "mocha": "^3.0.0-2"
   }
 }
