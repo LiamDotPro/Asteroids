@@ -5,6 +5,7 @@ install:
   - npm install -g codecov
   - npm install -g mocha
   - npm install -g chai
+  - npm install
 script: 
 - istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec
 - codecov
