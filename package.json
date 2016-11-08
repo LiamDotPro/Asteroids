@@ -1,7 +1,7 @@
 {
   "name": "Asteroids",
   "version": "0.0.0",
-  "description": "skeletonapp",
+  "description": "Asteroids the 2d application of destruction",
   "license": "BSD-3-Clause",
   "main": "index.js",
   "author": {

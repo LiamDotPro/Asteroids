@@ -1,6 +1,6 @@
 ﻿var assert = require('assert');
 var expect = require("chai").expect;
-var Spaceship = require('../spaceship.js');
+var Spaceship = require('../src/spaceship.js');
 var testShip = null;
 
 describe('hooks', function () {
