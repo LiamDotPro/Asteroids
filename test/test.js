@@ -4,9 +4,6 @@ var Spaceship = require('../spaceship.js');
 
 var testShip = new Spaceship(0, 0, ["w", "a", "d", "s"]);
 
-testShip.logCordinates();
-testShip.logControls();
-
 describe("Checking starting locations and defaults", function () {
     describe("Checking starting location x", function () {
         it("X Should init as 0", function () {
