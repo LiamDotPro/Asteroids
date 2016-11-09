@@ -122,7 +122,7 @@
     }
 
     this.logShipStatus = function () {
-        if (this.shield === 100) {
+        if (this.shield == 100) {
             console.log("Ship has maximum shield");
         } else if (this.shield > 50) {
             console.log("ship has more than 50% shield");
