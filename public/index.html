@@ -1,0 +1,31 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Asteroids</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <h1 id="id"></h1>
+    <div id="canvas"></div>
+    <script type="text/javascript" src="/src/Canvas.js"></script>
+    <script type="text/javascript" src="/src/Player.js"></script>
+    <script>
+        var socket = io();
+        var player;
+        socket.on('onconnected', function (data) {
+            player = new player(data.id, socket);
+            $("#id").text("Client: " + data.id);
+            //get canvas object
+            var canvasObj = new Canvas(player);
+
+            //programitcally create canvas element and get values from canvas class
+            var canvas = document.getElementById('canvas').appendChild(canvasObj.createCanvas("front menu"));
+            canvasObj.modifyCanvas(canvas, "front menu");
+
+        });
+    </script>
+</body>
+</html>

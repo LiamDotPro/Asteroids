@@ -1,13 +1,22 @@
-﻿var Spaceship = require('../spaceship.js');
+﻿function player(id, socket) {
 
-function player(spaceship) {
+    this.location = "Not Loaded";
+    this.playerSocket = socket;
+    this.playerID = id;
 
-    //spaceship controlled by the player
-    this.spaceship = spaceship;
+    this.getLocation = function () {
+        return this.location;
+    }
 
-    //players score
-    this.playerScore = 0;
+    this.setLocation = function (newLocation) {
+        this.location = newLocation;
+    }
 
 
-
+    this.ClientLoaded = function () {
+        this.location = "Home Screen";
+        socket.emit('clientLoaded', {
+            id: this.playerID
+        });
+    }
 }
