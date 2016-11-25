@@ -45,6 +45,7 @@ io.on('connection', function (socket) {
     });
 
     socket.on('clientLoaded', function (data) {
+        connectedUser.setLocation("front Menu");
         console.log("client: " + data.id + " loaded onto home screen");
     });
 

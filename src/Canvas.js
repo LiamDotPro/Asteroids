@@ -57,7 +57,7 @@
                 this.createCanvasText(ctx, "30px Arial", "white", "Liam Read", 570, 350);
                 this.createCanvasText(ctx, "60px Arial", "white", "Enter", 570, 600);
                 canvas.addEventListener("mousemove", this.on_mousemove.bind(), false);
-                canvas.addEventListener("click", on_click, false);
+                //canvas.addEventListener("click", on_click, false);
 
                 //Tell server main menu is loaded
                 this.player.ClientLoaded();

@@ -1,6 +1,7 @@
 ﻿var Client = function (id) {
     this.id = id;
     this.lobby = 0;
+    this.clientLocation = "";
 
     this.getLobbyStatus = function () {
         if (this.lobby === 0) {
@@ -28,10 +29,15 @@
             console.log(e);
         }
     }
-
+    
     //resets the lobby number to default 0 - not in lobby
     this.resetLobby = function () {
         this.lobby = 0;
+    }
+
+    this.setLocation = function (newLoc) {
+        this.clientLocation = newLoc;
+        console.log("Client Location updated");
     }
 }
 
