@@ -1,22 +1,63 @@
 ﻿function player(id, socket) {
 
+    this.lobbyNum = 0;
+    this.lobbyStatus = false;
+
     this.location = "Not Loaded";
     this.playerSocket = socket;
     this.playerID = id;
 
+    //gets the location of the user
     this.getLocation = function () {
         return this.location;
     }
 
+    //sets the location of the user
     this.setLocation = function (newLocation) {
         this.location = newLocation;
     }
 
+    //Notifys the server of client location changes
+    this.serverClientLocation = function (location) {
 
-    this.ClientLoaded = function () {
-        this.location = "Home Screen";
-        socket.emit('clientLoaded', {
-            id: this.playerID
-        });
+        try {
+            if (location === null || location === '') {
+                throw new Error("Location passed as null or empty string");
+            }
+        } catch (e) {
+            console.log(e);
+        } finally {
+            this.playerSocket.emit('clientLocationChange', {
+                stage: location
+            });
+
+            this.location = location;
+
+            console.log("Client -> Server: updated clients location.")
+        }
+    }
+
+    //tells the server a user is attempting to create a new lobby
+    this.playerCreateALobby = function () {
+        this.playerSocket.emit('createLobby', {});
+    }
+
+    //attempts to join a player to a lobby instance
+    this.joinALobby = function (lobbyID) {
+        this.playerSocket.emit('joinLobby', {
+            lobbyID: lobbyID
+        })
+    }
+
+    //registers from the server the player has joined a lobby
+    this.joinedLobby = function (lobbyNum) {
+        this.lobbyID = lobbyNum;
+        this.lobbyStatus = true;
+        console.log("Joined lobby: " + lobbyNum);
+    }
+
+    //tells the srv that the player has left the lobby
+    this.playerLeaveLobby = function () {
+        this.playerSocket.emit('leaveLobby', {});
     }
 }

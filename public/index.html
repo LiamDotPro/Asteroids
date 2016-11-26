@@ -12,20 +12,36 @@
     <div id="canvas"></div>
     <script type="text/javascript" src="/src/Canvas.js"></script>
     <script type="text/javascript" src="/src/Player.js"></script>
+    <script type="text/javascript" src="/src/localGame.js"></script>
     <script>
         var socket = io();
-        var player;
+        var canvasobj;
+        var playerobj;
+        //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
-            player = new player(data.id, socket);
+            playerobj = new player(data.id, socket);
             $("#id").text("Client: " + data.id);
             //get canvas object
-            var canvasObj = new Canvas(player);
+            canvasObj = new Canvas(playerobj, socket);
 
             //programitcally create canvas element and get values from canvas class
             var canvas = document.getElementById('canvas').appendChild(canvasObj.createCanvas("front menu"));
             canvasObj.modifyCanvas(canvas, "front menu");
 
+            playerobj.playerCreateALobby();
         });
+
+        //notifys the user a lobby has been created
+        socket.on('lobbyCreated', function (data) {
+            canvasObj.lobbyCreated(data.lobbyID);
+        });
+
+        //Notifys client they have joined the lobby
+        socket.on('userJoinedLobby', function (data) {
+            playerobj.joinedLobby(data.lobbyID);
+        });
+
     </script>
+    <h1 id="lobbyInstance"></h1>
 </body>
 </html>

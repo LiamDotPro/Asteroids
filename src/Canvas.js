@@ -1,11 +1,13 @@
-﻿function Canvas(player) {
+﻿function Canvas(player, socket) {
 
     //canvas properties
     this.player = player;
-    this.lobbys = [];
+    this.socket = socket;
+    this.lobbys = new Map();
 
-    this.init = function () {
-        this.lobbys = new Map();
+    //gets the associtated player instance
+    this.getPlayer = function(){
+        return this.player;
     }
 
     this.getBackgroundSourceColour = function () {
@@ -56,11 +58,11 @@
                 this.createCanvasText(ctx, "60px Arial", "white", "Asteroids", 520, 300);
                 this.createCanvasText(ctx, "30px Arial", "white", "Liam Read", 570, 350);
                 this.createCanvasText(ctx, "60px Arial", "white", "Enter", 570, 600);
-                canvas.addEventListener("mousemove", this.on_mousemove.bind(), false);
+                //canvas.addEventListener("mousemove", this.on_mousemove.bind(), false);
                 //canvas.addEventListener("click", on_click, false);
 
                 //Tell server main menu is loaded
-                this.player.ClientLoaded();
+                this.player.serverClientLocation("home screen");
                 break;
         }
     }
@@ -79,6 +81,7 @@
         }
     }
 
+    //Creates canvas text as a helper method
     this.createCanvasText = function (ctx, font, color, text, x, y) {
         ctx.font = font;
         ctx.fillStyle = color;
@@ -86,18 +89,9 @@
         console.log("Text Has been drawn" + ctx, font, color, text, x, y);
     }
 
-    this.changeCanvasBackground = function (c) {
-
+    //Creates a new instance of lobby object inside the canvas
+    this.lobbyCreated = function (lobbyID) {
+        this.lobbys.set(lobbyID, new localGame());
+        console.log("New lobby made : " + lobbyID);
     }
-
-    this.playerCreatedALobby = function (socket, ClientID) {
-
-    }
-
-    this.playerJoinedLobby = function (socket, ClientID, lobbyID) {
-
-    }
-
-
-    this.init();
 }
