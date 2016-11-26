@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>Asteroids</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 
@@ -10,26 +12,42 @@
 <body>
     <h1 id="id"></h1>
     <div id="canvas"></div>
+    <div id="enter"><h1>Enter</h1></div>
     <script type="text/javascript" src="/src/Canvas.js"></script>
     <script type="text/javascript" src="/src/Player.js"></script>
     <script type="text/javascript" src="/src/localGame.js"></script>
     <script>
         var socket = io();
         var canvasobj;
-        var playerobj;
+        var canvas;
+        var canvasElem = document.getElementById('canvas');
         //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
-            playerobj = new player(data.id, socket);
+            var playerobj = new player(data.id, socket);
             $("#id").text("Client: " + data.id);
             //get canvas object
-            canvasObj = new Canvas(playerobj, socket);
+            canvasobj = new Canvas(playerobj, socket);
 
             //programitcally create canvas element and get values from canvas class
-            var canvas = document.getElementById('canvas').appendChild(canvasObj.createCanvas("front menu"));
-            canvasObj.modifyCanvas(canvas, "front menu");
+            canvas = document.getElementById('canvas').appendChild(canvasobj.createCanvas("front menu"));
+            canvasobj.modifyCanvas(canvas, "front menu");
 
-            playerobj.playerCreateALobby();
+            $(document).ready(function () {
+                $("#enter").click(function () {
+                    socket.emit('enterClicked', {
+
+                    });
+                });
+            });
+
         });
+
+        //Notifys client location has been updated
+        socket.on('movedToLobby', function () {
+            canvasobj.modifyCanvas(canvas, "lobby menu");
+            canvasobj.getPlayer().serverClientLocation("lobby menu");
+            $("#enter").hide();
+        })
 
         //notifys the user a lobby has been created
         socket.on('lobbyCreated', function (data) {
@@ -38,7 +56,7 @@
 
         //Notifys client they have joined the lobby
         socket.on('userJoinedLobby', function (data) {
-            playerobj.joinedLobby(data.lobbyID);
+            canvasobj.getPlayer().joinedLobby(data.lobbyID);
         });
 
     </script>

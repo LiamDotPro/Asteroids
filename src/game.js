@@ -1,4 +1,4 @@
-﻿var Game = function (id, playerID) {
+﻿var Game = function (id, playerID, spaceship, spaceship1) {
 
     //game properties
     this.lobbyID = id;
@@ -9,7 +9,11 @@
     this.player1ID = playerID;
     this.player2ID;
 
-    //canvas board
+    //Asteroids
+
+    //spaceships
+    this.player1Spaceship = spaceship;
+    this.player2Spaceship = spaceship1;
 
     //player status within game
     this.player1Status = false;

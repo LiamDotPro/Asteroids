@@ -79,7 +79,6 @@ io.on('connection', function (socket) {
                 break;
         }
 
-        console.log(connectedUser);
     });
 
     //creates a lobby and joins the client to the lobby.
@@ -124,5 +123,13 @@ io.on('connection', function (socket) {
                 }
             }
         })
+    });
+
+    socket.on('enterClicked', function () {
+        console.log("client " + clientInstance.getId() + " Entered the lobby");
+
+        socket.emit('movedToLobby', {
+
+        });
     });
 });

@@ -6,7 +6,7 @@
     this.lobbys = new Map();
 
     //gets the associtated player instance
-    this.getPlayer = function(){
+    this.getPlayer = function () {
         return this.player;
     }
 
@@ -23,8 +23,6 @@
         switch (stage) {
             case "front menu":
                 return this.buildCanvas(1280, 680, 666, 'rgba(158, 167, 184, 0.2)');
-                break;
-            case "game":
                 break;
             default:
                 console.log("you have entered an incorrect stage.")
@@ -46,38 +44,29 @@
 
     //Modifys each canvas so it has the correct setup for where the user is
     this.modifyCanvas = function (canvas, stage) {
+
         if (!isNaN(stage) || stage == "") {
             throw "Passed incorrect type or empty string";
         }
 
+        var ctx = canvas.getContext("2d");
+
         switch (stage) {
             case "front menu":
-                var ctx = canvas.getContext("2d");
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 this.createCanvasText(ctx, "60px Arial", "white", "Asteroids", 520, 300);
                 this.createCanvasText(ctx, "30px Arial", "white", "Liam Read", 570, 350);
-                this.createCanvasText(ctx, "60px Arial", "white", "Enter", 570, 600);
-                //canvas.addEventListener("mousemove", this.on_mousemove.bind(), false);
-                //canvas.addEventListener("click", on_click, false);
 
                 //Tell server main menu is loaded
                 this.player.serverClientLocation("home screen");
                 break;
-        }
-    }
 
-
-
-    //.addEventListener(event, (function(e) {
-    //    const x = blah, y = blarg, z = poop;
-    //    return function(bar) { ...  use x,y,z }
-    //})(e), false)
-
-    this.on_mousemove = function (ev) {
-        var x, y;
-
-        if (ev.layerX || ev.layerX == 0) {
+            case "lobby menu":
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#FF0000";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                break;
         }
     }
 
@@ -94,4 +83,5 @@
         this.lobbys.set(lobbyID, new localGame());
         console.log("New lobby made : " + lobbyID);
     }
+
 }

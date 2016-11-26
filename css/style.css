@@ -1,0 +1,9 @@
+﻿#enter {
+    z-index: 800;
+    color: white;
+    position: absolute;
+    margin-top: 500px;
+    margin-left: 540px;
+    font-family: arial;
+    font-size: 40px;
+}
