@@ -125,11 +125,32 @@ io.on('connection', function (socket) {
         })
     });
 
+    //triggered when a player leaves the home screen
     socket.on('enterClicked', function () {
         console.log("client " + clientInstance.getId() + " Entered the lobby");
+
+        var lobbyArr = [];
+
+        allConnectedClients.forEach(function (element) {
+            if (element.getUserLobby() !== null && typeof element.getUserLobby() !== "undefined" ) {
+
+                var lobbyCapacity = element.getUserLobby();
+                var lobbyPlayerStatus = lobbyCapacity.checkPlayer2();
+
+                lobbyArr.push(element.getUserLobby(), lobbyPlayerStatus);
+            }
+        });
+
+        console.log(lobbyArr);
+
 
         socket.emit('movedToLobby', {
 
         });
+
+        socket.emit('getLobbyList', {
+
+        });
+
     });
 });

@@ -63,9 +63,12 @@
                 break;
 
             case "lobby menu":
+                //clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "#FF0000";
+                ctx.fillStyle = "#000000";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                this.createCanvasText(ctx, "40px Arial", "white", "Lobby Menu", 30, 50);
+
                 break;
         }
     }

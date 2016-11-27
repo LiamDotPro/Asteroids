@@ -52,6 +52,15 @@
         }
     }
 
+    //finds if a second player is connected
+    this.checkPlayer2 = function () {
+        if (this.player2ID === null || this.player2ID === "") {
+            return 1;
+        } else {
+            return 2;
+        }
+    }
+
 }
 
 module.exports = Game;
