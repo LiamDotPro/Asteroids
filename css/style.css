@@ -1,9 +1,52 @@
 ﻿#controls {
-    z-index: 800;
-    color: white;
+    z-index: 901;
+}
+
+    #controls h1 {
+        z-index: 901;
+        color: white;
+        position: absolute;
+        margin-top: 500px;
+        margin-left: 562px;
+        font-family: arial;
+        font-size: 65px;
+    }
+
+    #controls #lobbyBtn {
+        z-index: 901;
+        position: absolute;
+        margin-top: 650px;
+        margin-left: 670px;
+        font-size: 20px;
+    }
+
+    #controls #createLobbyBtn {
+        z-index: 901;
+        position: absolute;
+        margin-top: 650px;
+        margin-left: 420px;
+        font-size: 20px;
+    }
+
+#lobbies {
+    max-width: 1260px;
+    min-width: 1239px;
     position: absolute;
-    margin-top: 500px;
-    margin-left: 540px;
-    font-family: arial;
-    font-size: 40px;
+    text-align: center;
+    margin-left: 10px;
+    z-index: 900;
+    margin-top: 75px;
+    min-height: 630px;
+}
+
+.lobbyTile {
+    padding-bottom: 10px;
+}
+
+.lobbyDiv {
+    background: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
 }

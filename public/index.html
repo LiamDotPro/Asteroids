@@ -6,13 +6,26 @@
 
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 </head>
 <body>
     <h1 id="id"></h1>
     <div id="controls"><h1>Enter</h1></div>
-    <div id="canvas"></div>
+    <div id="lobbies">
+        <div class="row">
+
+        </div>
+    </div>
+    <div class="container-fluid">
+
+        <div class="row">
+            <div id="canvas"></div>
+        </div>
+    </div>
+
     <script type="text/javascript" src="/src/Canvas.js"></script>
     <script type="text/javascript" src="/src/Player.js"></script>
     <script type="text/javascript" src="/src/localGame.js"></script>
@@ -33,14 +46,24 @@
             canvasobj.modifyCanvas(canvas, "front menu");
 
             $(document).ready(function () {
-                $("#controls").click(function () {
-
+                $("#controls h1").click(function () {
                     //tells the server client has entered
                     socket.emit('enterClicked', {
                     });
+
+                    //unbind old event
+                    $("#controls h1").unbind();
+
+                    //binds new event buttons as delegates
+                    document.getElementById("controls").addEventListener("click", function (e) {
+                        if (e.target && e.target.id === "createLobbyBtn") {
+                            console.log("Player attempting to create a lobby");
+
+                            canvasobj.getPlayer().playerCreateALobby();
+                        }
+                    });
                 });
             });
-
         });
 
         //Notifys client location has been updated
@@ -49,18 +72,35 @@
             canvasobj.getPlayer().serverClientLocation("lobby menu");
             //empties the div of all nodes
             $("#controls").empty();
+            var joinLobby = "<input class='btn btn-default' id='lobbyBtn' value='Join Lobby' />";
+            var createLobby = "<input class='btn btn-default' id='createLobbyBtn' value='Create Lobby' />"
+            $('#controls').append(joinLobby, createLobby);
+
+            //at this point the lobby has been built check for any open lobbies
+
         })
+
+
 
         //notifys the user a lobby has been created
         socket.on('lobbyCreated', function (data) {
-            canvasObj.lobbyCreated(data.lobbyID);
+            canvasobj.lobbyCreated(data.lobbyID);
+            $("#lobbies").append("<div class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5></div></div>");
         });
 
         //Notifys client they have joined the lobby
         socket.on('userJoinedLobby', function (data) {
             canvasobj.getPlayer().joinedLobby(data.lobbyID);
+
+            //player has joined a lobby modify the canvas to show the lobby waiting room.
+
         });
 
+
+
     </script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </body>
 </html>

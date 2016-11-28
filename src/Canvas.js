@@ -68,7 +68,6 @@
                 ctx.fillStyle = "#000000";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 this.createCanvasText(ctx, "40px Arial", "white", "Lobby Menu", 30, 50);
-
                 break;
         }
     }
