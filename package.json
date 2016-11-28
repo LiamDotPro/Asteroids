@@ -1,9 +1,9 @@
 {
-  "name": "Asteroids",
+  "name": "asteroids",
   "version": "0.0.0",
   "description": "Asteroids the 2d application of destruction",
   "license": "BSD-3-Clause",
-  "main": "index.js",
+  "main": "server.js",
   "author": {
     "name": "li"
   },
