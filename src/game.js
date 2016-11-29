@@ -7,7 +7,7 @@
 
     //when a new lobby is formed 
     this.player1ID = playerID;
-    this.player2ID;
+    this.player2ID = "";
 
     //Asteroids
 

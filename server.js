@@ -43,15 +43,16 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
         try {
             if (allConnectedClients.has(socket.id)) {
+                console.log(socket.id + ' disconnected');
                 allConnectedClients.delete(socket.id);
-                console.log('user disconnected');
-                console.log(allConnectedClients);
+
             } else {
                 throw new Error("No socket id found in client list.");
             }
         }
         catch (e) {
             console.log(e);
+            console.log(allConnectedClients);
         }
     });
 
@@ -97,11 +98,14 @@ io.on('connection', function (socket) {
 
         //notify all clients of lobby creation
         io.emit('lobbyCreated', {
-            lobbyID: clientInstance.getLobbyNum()
+            lobbyID: clientInstance.getLobbyNum(),
+            players: 1
         });
 
         socket.emit('userJoinedLobby', {
-            lobbyID: clientInstance.getLobbyNum()
+            lobbyID: clientInstance.getLobbyNum(),
+            //only emit this clients id as it's a new defined lobby
+            players: [clientInstance.getId()]
         });
     });
 
@@ -137,18 +141,13 @@ io.on('connection', function (socket) {
                 var lobbyCapacity = element.getUserLobby();
                 var lobbyPlayerStatus = lobbyCapacity.checkPlayer2();
 
-                lobbyArr.push(element.getUserLobby(), lobbyPlayerStatus);
+                lobbyArr.push([element.getUserLobby().getLobbyID(), lobbyPlayerStatus]);
             }
         });
 
-        console.log(lobbyArr);
-
-
+        //finds all of the open lobbies currently on the sever
         socket.emit('movedToLobby', {
-
-        });
-
-        socket.emit('getLobbyList', {
+            arrOfLobbies: lobbyArr
 
         });
 

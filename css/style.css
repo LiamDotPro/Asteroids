@@ -15,16 +15,16 @@
     #controls #lobbyBtn {
         z-index: 901;
         position: absolute;
-        margin-top: 650px;
-        margin-left: 670px;
+        margin-top: 630px;
+        margin-left: 270px;
         font-size: 20px;
     }
 
     #controls #createLobbyBtn {
         z-index: 901;
         position: absolute;
-        margin-top: 650px;
-        margin-left: 420px;
+        margin-top: 630px;
+        margin-left: 20px;
         font-size: 20px;
     }
 

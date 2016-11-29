@@ -15,7 +15,7 @@
     <h1 id="id"></h1>
     <div id="controls"><h1>Enter</h1></div>
     <div id="lobbies">
-        <div class="row">
+        <div id="lobbyRow" class="row lobbyRow">
 
         </div>
     </div>
@@ -34,6 +34,8 @@
         var canvasobj;
         var canvas;
         var canvasElem = document.getElementById('canvas');
+        var lobbyTag = document.getElementById("lobbies");
+        var controlsTag = document.getElementById("controls");
         //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
             var playerobj = new player(data.id, socket);
@@ -62,37 +64,73 @@
                             canvasobj.getPlayer().playerCreateALobby();
                         }
                     });
+
                 });
+
+                $('#lobbies').css("display", 'none');
             });
         });
 
         //Notifys client location has been updated
-        socket.on('movedToLobby', function () {
+        socket.on('movedToLobby', function (data) {
             canvasobj.modifyCanvas(canvas, "lobby menu");
             canvasobj.getPlayer().serverClientLocation("lobby menu");
             //empties the div of all nodes
+            $('#lobbies').css('display', '');
             $("#controls").empty();
             var joinLobby = "<input class='btn btn-default' id='lobbyBtn' value='Join Lobby' />";
             var createLobby = "<input class='btn btn-default' id='createLobbyBtn' value='Create Lobby' />"
             $('#controls').append(joinLobby, createLobby);
 
-            //at this point the lobby has been built check for any open lobbies
+            //This stops clients from being pushed lobbies that may have been added while on loading screen.
+            var assignedArray = []
 
+            var lobbyChildren = document.getElementById("lobbyRow").children;
+
+            for (var i = 0; i < lobbyChildren.length; i++) {
+                assignedArray.push(lobbyChildren[i].id);
+            }
+
+            //at this point the lobby has been built check for any open games
+            for (var i = 0; i < data.arrOfLobbies.length; i++) {
+                if (!assignedArray.includes(data.arrOfLobbies[i][0])) {
+                    $(".lobbyRow").append("<div id='" + data.arrOfLobbies[i][0] + "' class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.arrOfLobbies[i][0] + " </h5><h5>Players: " + data.arrOfLobbies[i][1] + "</h5></div></div>");
+                } else {
+                    console.log("match found");
+                }
+            }
+
+            
+            //data.arrOfLobbies.forEach(function (element) {
+               
+            //});
         })
 
 
 
         //notifys the user a lobby has been created
         socket.on('lobbyCreated', function (data) {
-            canvasobj.lobbyCreated(data.lobbyID);
-            $("#lobbies").append("<div class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5></div></div>");
+            canvasobj.lobbyCreated(data.lobbyID, data.players);
+            $(".lobbyRow").append("<div id='" + data.lobbyID + "' class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5></div></div>");
         });
 
         //Notifys client they have joined the lobby
         socket.on('userJoinedLobby', function (data) {
             canvasobj.getPlayer().joinedLobby(data.lobbyID);
+            //render the user into the lobby they joined
+
+            lobbyTag.style.display = "none";
+            controlsTag.style.display = "none";
+
+
+            console.log("users in room:" + data.players);
 
             //player has joined a lobby modify the canvas to show the lobby waiting room.
+            canvasobj.modifyCanvas(canvas, "game lobby");
+            canvasobj.constructUserLobby(canvas, data.players, data.lobbyID);
+            console.log(data.players);
+
+
 
         });
 
@@ -100,7 +138,7 @@
 
     </script>
 
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -53,6 +53,7 @@
 
         switch (stage) {
             case "front menu":
+                console.log("rendering the front menu");
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 this.createCanvasText(ctx, "60px Arial", "white", "Asteroids", 520, 300);
@@ -63,13 +64,32 @@
                 break;
 
             case "lobby menu":
+                console.log("rendering the lobby screen");
                 //clear canvas
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#000000";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 this.createCanvasText(ctx, "40px Arial", "white", "Lobby Menu", 30, 50);
                 break;
+
+            case "game lobby":
+                console.log("rendering the game lobby screen");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                this.player.serverClientLocation("game lobby");
+
+                break;
         }
+    }
+
+    //constructs a user defined lobby
+    this.constructUserLobby = function(canvas, otherUser, lobbyTitle){
+    
+        var ctx = canvas.getContext("2d");
+        this.createCanvasText(ctx, "26px Arial", "white", "Game Lobby: " + lobbyTitle, 30, 50);
+
     }
 
     //Creates canvas text as a helper method
@@ -81,9 +101,10 @@
     }
 
     //Creates a new instance of lobby object inside the canvas
-    this.lobbyCreated = function (lobbyID) {
+    this.lobbyCreated = function (lobbyID, players) {
         this.lobbys.set(lobbyID, new localGame());
         console.log("New lobby made : " + lobbyID);
+        console.log("This Lobby has: " + players + " Players");
     }
 
 }
