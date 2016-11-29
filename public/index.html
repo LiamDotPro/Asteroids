@@ -36,6 +36,7 @@
         var canvasElem = document.getElementById('canvas');
         var lobbyTag = document.getElementById("lobbies");
         var controlsTag = document.getElementById("controls");
+        var selectedID = "";
         //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
             var playerobj = new player(data.id, socket);
@@ -64,7 +65,6 @@
                             canvasobj.getPlayer().playerCreateALobby();
                         }
                     });
-
                 });
 
                 $('#lobbies').css("display", 'none');
@@ -78,40 +78,56 @@
             //empties the div of all nodes
             $('#lobbies').css('display', '');
             $("#controls").empty();
-            var joinLobby = "<input class='btn btn-default' id='lobbyBtn' value='Join Lobby' />";
             var createLobby = "<input class='btn btn-default' id='createLobbyBtn' value='Create Lobby' />"
-            $('#controls').append(joinLobby, createLobby);
+            $('#controls').append(createLobby);
 
             //This stops clients from being pushed lobbies that may have been added while on loading screen.
-            var assignedArray = []
+            var assignedArray = getListOfAssigneLobbies();
 
-            var lobbyChildren = document.getElementById("lobbyRow").children;
-
-            for (var i = 0; i < lobbyChildren.length; i++) {
-                assignedArray.push(lobbyChildren[i].id);
-            }
-
+            console.log(assignedArray);
             //at this point the lobby has been built check for any open games
             for (var i = 0; i < data.arrOfLobbies.length; i++) {
+                console.log(data.arrOfLobbies[i][0]);
                 if (!assignedArray.includes(data.arrOfLobbies[i][0])) {
-                    $(".lobbyRow").append("<div id='" + data.arrOfLobbies[i][0] + "' class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.arrOfLobbies[i][0] + " </h5><h5>Players: " + data.arrOfLobbies[i][1] + "</h5></div></div>");
-                } else {
-                    console.log("match found");
+                    $(".lobbyRow").append("<div class='col-xs-3 lobbyTile'><div id='" + data.arrOfLobbies[i][0] + "' class='lobbyDiv'><h5>ID:" + data.arrOfLobbies[i][0] + " </h5><h5>Players: " + data.arrOfLobbies[i][1] + "</h5> <input class='btn btn-default joinLobbyBtn' value='Join' /></div></div>");
                 }
             }
 
-            
-            //data.arrOfLobbies.forEach(function (element) {
-               
-            //});
-        })
+            //add event listeners for the lobbys
+            document.getElementById("lobbyRow").addEventListener("click", function (e) {
+                if (e.target.classList.contains("joinLobbyBtn")) {
+                    var targetID = e.target.parentElement.id;
+                    targetID = targetID.toString();
+                    console.log(targetID);
 
+                    socket.emit('joinLobby', {
+                        lobbyID: targetID
+                    });
 
+                }
+            });
+
+        });
+
+        function getListOfAssigneLobbies() {
+            var assignedArrayTemp = [];
+
+            var lobbyChildren = document.getElementsByClassName("lobbyDiv");
+
+            for (var i = 0; i < lobbyChildren.length; i++) {
+                assignedArrayTemp.push(lobbyChildren[i].id);
+            }
+            return assignedArrayTemp;
+        }
+
+        socket.on('lobbyFull', function () {
+            alert("The lobby you tried to join is full!");
+        });
 
         //notifys the user a lobby has been created
         socket.on('lobbyCreated', function (data) {
             canvasobj.lobbyCreated(data.lobbyID, data.players);
-            $(".lobbyRow").append("<div id='" + data.lobbyID + "' class='col-xs-3 lobbyTile'><div class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5></div></div>");
+            $(".lobbyRow").append("<div  class='col-xs-3 lobbyTile'><div id='" + data.lobbyID + "' class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5>  <input class='btn btn-default joinLobbyBtn' value='Join' /></div></div>");
         });
 
         //Notifys client they have joined the lobby

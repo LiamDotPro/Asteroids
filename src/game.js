@@ -25,8 +25,8 @@
     }
 
     //gets player 1's ID
-    this.getPlayer1 = function () {
-        return this.player1;
+    this.getPlayer1ID = function () {
+        return this.player1ID;
     }
 
     //sets player 2's ID

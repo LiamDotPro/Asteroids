@@ -111,19 +111,24 @@ io.on('connection', function (socket) {
 
     //player has tried to join a lobby
     socket.on('joinLobby', function (data) {
+        console.log(data);
         allConnectedClients.forEach(function (element) {
-            if (element.getUserLobby() !== null) {
-                if (element.getLobbyNum() === data.lobbyID) {
+            if (typeof element.getUserLobby() !== "undefined" && element.getUserLobby() !== null && element.getLobbyNum() === data.lobbyID && element.getUserLobby().checkPlayer2() !== 2) {
 
-                    //adds a user to the lobby and sets them as player 2
-                    element.getUserLobby().setPlayer2(clientInstance.getId());
+                //adds a user to the lobby and sets them as player 2
+                element.getUserLobby().setPlayer2(clientInstance.getId());
 
-                    //joins the user to the room
-                    socket.join(element.getLobbyNum());
+                //joins the user to the room
+                socket.join(element.getLobbyNum());
 
-                    socket.emit('userJoinedLobby', {
-                        lobbyID: element.getLobbyNum()
-                    });
+                socket.emit('userJoinedLobby', {
+                    lobbyID: element.getLobbyNum(),
+                    players: [element.getUserLobby().getPlayer1ID(), clientInstance.getId()]
+                });
+                console.log(element.getUserLobby());
+            } else {
+                if (typeof element.getUserLobby() !== "undefined") {
+                    console.log(data.lobbyID + " did not match " + element.getLobbyNum());
                 }
             }
         })
@@ -136,7 +141,7 @@ io.on('connection', function (socket) {
         var lobbyArr = [];
 
         allConnectedClients.forEach(function (element) {
-            if (element.getUserLobby() !== null && typeof element.getUserLobby() !== "undefined" ) {
+            if (element.getUserLobby() !== null && typeof element.getUserLobby() !== "undefined") {
 
                 var lobbyCapacity = element.getUserLobby();
                 var lobbyPlayerStatus = lobbyCapacity.checkPlayer2();
