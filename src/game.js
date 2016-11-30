@@ -31,7 +31,7 @@
 
     //sets player 2's ID
     this.setPlayer2 = function (playerID) {
-        this.player2 = playerID;
+        this.player2ID = playerID;
     }
 
     //gets player 2's ID

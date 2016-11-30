@@ -84,7 +84,6 @@
             //This stops clients from being pushed lobbies that may have been added while on loading screen.
             var assignedArray = getListOfAssigneLobbies();
 
-            console.log(assignedArray);
             //at this point the lobby has been built check for any open games
             for (var i = 0; i < data.arrOfLobbies.length; i++) {
                 console.log(data.arrOfLobbies[i][0]);
@@ -145,9 +144,15 @@
             canvasobj.modifyCanvas(canvas, "game lobby");
             canvasobj.constructUserLobby(canvas, data.players, data.lobbyID);
             console.log(data.players);
+        });
 
+        socket.on('lobbyFull', function () {
+            alert("The lobby is funn unable to join");
+        });
 
-
+        socket.on('updateLobbyPlayers', function (data) {
+            var lobbyDiv = document.getElementById(data.lobbyID);
+            lobbyDiv.children[1].innerText = "Players: "+ data.players.toString();
         });
 
 

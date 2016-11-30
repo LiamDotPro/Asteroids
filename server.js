@@ -111,9 +111,14 @@ io.on('connection', function (socket) {
 
     //player has tried to join a lobby
     socket.on('joinLobby', function (data) {
-        console.log(data);
         allConnectedClients.forEach(function (element) {
-            if (typeof element.getUserLobby() !== "undefined" && element.getUserLobby() !== null && element.getLobbyNum() === data.lobbyID && element.getUserLobby().checkPlayer2() !== 2) {
+            if (typeof element.getUserLobby() !== "undefined" && element.getUserLobby() !== null && element.getLobbyNum() === data.lobbyID) {
+
+                if (element.getUserLobby().checkPlayer2() === 2) {
+                    socket.emit('lobbyFull', {
+                    });
+                    return;
+                }
 
                 //adds a user to the lobby and sets them as player 2
                 element.getUserLobby().setPlayer2(clientInstance.getId());
@@ -125,7 +130,12 @@ io.on('connection', function (socket) {
                     lobbyID: element.getLobbyNum(),
                     players: [element.getUserLobby().getPlayer1ID(), clientInstance.getId()]
                 });
-                console.log(element.getUserLobby());
+
+                io.emit('updateLobbyPlayers', {
+                    lobbyID: element.getLobbyNum(),
+                    players: 2
+                });
+
             } else {
                 if (typeof element.getUserLobby() !== "undefined") {
                     console.log(data.lobbyID + " did not match " + element.getLobbyNum());
