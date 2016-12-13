@@ -19,11 +19,19 @@
 
         </div>
     </div>
+    <div class="userLobby">
+        <div id="lobby">
+            <h1>Currently Connected Users:</h1>
+        </div>
+    </div>
     <div class="container-fluid">
-
         <div class="row">
             <div id="canvas"></div>
         </div>
+    </div>
+
+    <div>
+
     </div>
 
     <script type="text/javascript" src="/src/Canvas.js"></script>
@@ -137,24 +145,47 @@
             lobbyTag.style.display = "none";
             controlsTag.style.display = "none";
 
-
+            //Logs Clients currently connected to the room
             console.log("users in room:" + data.players);
+
+            for (var i = 0; i < data.players.length; i++) {
+                $("#lobby").append("<p id='" + data.players[i] + "'>" + data.players[i] + "</p>");
+            }
+
+            $("#obby").css("display", "");
 
             //player has joined a lobby modify the canvas to show the lobby waiting room.
             canvasobj.modifyCanvas(canvas, "game lobby");
             canvasobj.constructUserLobby(canvas, data.players, data.lobbyID);
-            console.log(data.players);
+
+            console.log("I have successfully joined a lobby!");
         });
 
-        socket.on('lobbyFull', function () {
-            alert("The lobby is funn unable to join");
-        });
-
+        //updates the html dom room when someone joins or leaves a room.
         socket.on('updateLobbyPlayers', function (data) {
             var lobbyDiv = document.getElementById(data.lobbyID);
-            lobbyDiv.children[1].innerText = "Players: "+ data.players.toString();
+            lobbyDiv.children[1].innerText = "Players: " + data.players.toString();
         });
 
+        //removes the selected element from the dom.
+        socket.on("removeLobby", function (data) {
+            $("#" + data.lobbyID).remove();
+        });
+
+        //A user has joined the lobby you are in.
+        socket.on("UserJoinedYourLobby", function (data) {
+            console.log("Player " + data.playerID + " has joined the lobby");
+        });
+
+        //player has left a lobby you are connected to.
+        socket.on("playerLeftLobby", function (data) {
+            console.log("player " + data.playerID + " has left the lobby.");
+        });
+
+        //Triggered when you are connected to a lobby and the host leaves.
+        socket.on("HostClosedLobby", function (data) {
+            console.log("Host closed the lobby you are in!");
+        });
 
 
     </script>

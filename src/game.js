@@ -1,8 +1,8 @@
-﻿var Game = function (id, playerID, spaceship, spaceship1) {
+﻿var Game = function (id, playerID) {
 
     //game properties
     this.lobbyID = id;
-    this.lobbyStatus;
+    this.lobbyStatus = "InLobby";
     this.host = playerID;
 
     //when a new lobby is formed 
@@ -12,8 +12,8 @@
     //Asteroids
 
     //spaceships
-    this.player1Spaceship = spaceship;
-    this.player2Spaceship = spaceship1;
+    this.player1Spaceship;
+    this.player2Spaceship;
 
     //player status within game
     this.player1Status = false;
@@ -35,7 +35,7 @@
     }
 
     //gets player 2's ID
-    this.getPlayer2 = function () {
+    this.getPlayer2ID = function () {
         return this.player2ID;
     }
 
@@ -59,6 +59,16 @@
         } else {
             return 2;
         }
+    }
+
+    //sets the lobby status
+    this.setLobbyStatus = function (status) {
+        this.lobbyStatus = status;
+    }
+
+    //gets the lobby status
+    this.getLobbyStatus = function () {
+        return this.lobbyStatus;
     }
 
 }

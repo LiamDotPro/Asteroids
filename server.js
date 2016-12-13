@@ -11,6 +11,7 @@ var UUID = require('./src/UUID.js');
 
 //Gets all of the connected clients
 var allConnectedClients = new Map();
+var lobbys = new Map();
 
 //UUID generating class
 var UUID = new UUID();
@@ -41,6 +42,56 @@ io.on('connection', function (socket) {
     console.log("Srv <- Client connected: " + socket.id);
 
     socket.on('disconnect', function () {
+
+        //Check to see if the disconnecting user was in a lobby.
+        if (clientInstance.getLobbyNum() != 0) {
+            var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
+
+            //check if disconnecting user was host.
+            if (CurrentlyConnectedlobby.getPlayer1ID() === clientInstance.getId()) {
+
+
+                if (CurrentlyConnectedlobby.getPlayer2ID() != "") {
+
+                    //another player is connected to the lobby
+                    io.to(CurrentlyConnectedlobby.getPlayer2ID()).emit("HostClosedLobby", {
+
+                    });
+                }
+
+
+                //notify clients that lobby has been removed - host.
+                io.emit('removeLobby', {
+                    lobbyID: CurrentlyConnectedlobby.getLobbyID()
+                });
+
+                console.log("Srv -> Client Lobby " + CurrentlyConnectedlobby.getLobbyID() + " Has been Removed");
+
+                //safely destroy instance from map.
+                lobbys.delete(CurrentlyConnectedlobby.getLobbyID());
+
+            } else {
+
+                console.log(CurrentlyConnectedlobby.getLobbyID());
+
+                //notifys lobby the player has left - not host.
+                io.to(CurrentlyConnectedlobby.getLobbyID()).emit("playerLeftLobby", {
+                    playerID: clientInstance.getId()
+                });
+
+                //Player two from a lobby has left, notify all clients and update lobby board
+                io.emit('updateLobbyPlayers', {
+                    lobbyID: CurrentlyConnectedlobby.getLobbyID(),
+                    players: 1
+                });
+
+                //Setting player 2 ID as nothing to repsent not connected.
+                CurrentlyConnectedlobby.setPlayer2("");
+                console.log("Srv -> Client Player 2 Has left " + CurrentlyConnectedlobby.getLobbyID());
+            }
+        }
+
+        //Removes the user safely from the map.
         try {
             if (allConnectedClients.has(socket.id)) {
                 console.log(socket.id + ' disconnected');
@@ -90,8 +141,10 @@ io.on('connection', function (socket) {
         UUID.generateUUID();
 
         //create a new lobby with game instance
-        clientInstance.setLobby(new Game(UUID.getUUID(), socket.id));
-        console.log(clientInstance.getUserLobby());
+        lobbys.set(UUID.getUUID(), new Game(UUID.getUUID(), socket.id));
+        clientInstance.setLobbyNum(UUID.getUUID());
+
+        console.log("client joined " + clientInstance.getLobbyNum());
 
         //sets a room up for the users game
         socket.join(clientInstance.getLobbyNum());
@@ -104,44 +157,57 @@ io.on('connection', function (socket) {
 
         socket.emit('userJoinedLobby', {
             lobbyID: clientInstance.getLobbyNum(),
-            //only emit this clients id as it's a new defined lobby
+            //only emit this clients id as it's a newly defined lobby
             players: [clientInstance.getId()]
         });
     });
 
     //player has tried to join a lobby
     socket.on('joinLobby', function (data) {
-        allConnectedClients.forEach(function (element) {
-            if (typeof element.getUserLobby() !== "undefined" && element.getUserLobby() !== null && element.getLobbyNum() === data.lobbyID) {
+        console.log(connectedUser.getId() + " is attempting to join a lobby");
+        console.log(lobbys.get(data.lobbyID) + " " + data.lobbyID);
+        var selLobby;
 
-                if (element.getUserLobby().checkPlayer2() === 2) {
-                    socket.emit('lobbyFull', {
-                    });
-                    return;
-                }
+        if (lobbys.get(data.lobbyID) != null) {
+            selLobby = lobbys.get(data.lobbyID);
+        } else {
+            console.log("Srv !-> Client " + socket.id + " Tried to join a lobby but it was not found");
+            return;
+        }
 
-                //adds a user to the lobby and sets them as player 2
-                element.getUserLobby().setPlayer2(clientInstance.getId());
+        //delimiter for the amount of players joined
+        if (selLobby.checkPlayer2() === 2) {
+            socket.emit('lobbyFull', {
+            });
+            return;
+        }
 
-                //joins the user to the room
-                socket.join(element.getLobbyNum());
+        //adds a user to the lobby and sets them as player 2
+        selLobby.setPlayer2(clientInstance.getId());
 
-                socket.emit('userJoinedLobby', {
-                    lobbyID: element.getLobbyNum(),
-                    players: [element.getUserLobby().getPlayer1ID(), clientInstance.getId()]
-                });
+        //joins the user to the room
+        socket.join(selLobby.getLobbyID());
 
-                io.emit('updateLobbyPlayers', {
-                    lobbyID: element.getLobbyNum(),
-                    players: 2
-                });
+        //Add lobby number to client
+        clientInstance.setLobbyNum(UUID.getUUID());
 
-            } else {
-                if (typeof element.getUserLobby() !== "undefined") {
-                    console.log(data.lobbyID + " did not match " + element.getLobbyNum());
-                }
-            }
-        })
+        //notify others in the lobby you've joined.
+        socket.broadcast.to(selLobby.getLobbyID()).emit("UserJoinedYourLobby", {
+            playerID : clientInstance.getId()
+        });
+
+        //notify 
+        socket.emit('userJoinedLobby', {
+            lobbyID: selLobby.getLobbyID(),
+            players: [selLobby.getPlayer1ID(), clientInstance.getId()]
+        });
+
+        //updates all of the clients that the lobby number has changed
+        io.emit('updateLobbyPlayers', {
+            lobbyID: selLobby.getLobbyID(),
+            players: 2
+        });
+
     });
 
     //triggered when a player leaves the home screen
@@ -150,20 +216,13 @@ io.on('connection', function (socket) {
 
         var lobbyArr = [];
 
-        allConnectedClients.forEach(function (element) {
-            if (element.getUserLobby() !== null && typeof element.getUserLobby() !== "undefined") {
-
-                var lobbyCapacity = element.getUserLobby();
-                var lobbyPlayerStatus = lobbyCapacity.checkPlayer2();
-
-                lobbyArr.push([element.getUserLobby().getLobbyID(), lobbyPlayerStatus]);
-            }
+        lobbys.forEach(function (element) {
+            lobbyArr.push([element.getLobbyID(), element.checkPlayer2()]);
         });
 
         //finds all of the open lobbies currently on the sever
         socket.emit('movedToLobby', {
             arrOfLobbies: lobbyArr
-
         });
 
     });

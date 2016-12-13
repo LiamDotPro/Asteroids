@@ -44,6 +44,7 @@
 
     //attempts to join a player to a lobby instance
     this.joinALobby = function (lobbyID) {
+        console.log("I'm Attempting to join a lobby!");
         this.playerSocket.emit('joinLobby', {
             lobbyID: lobbyID
         })
