@@ -44,9 +44,9 @@ io.on('connection', function (socket) {
     socket.on('disconnect', function () {
 
         //Check to see if the disconnecting user was in a lobby.
-        if (clientInstance.getLobbyNum() != 0) {
+        if (clientInstance.getLobbyNum() !== 0 && typeof clientInstance.getLobbyNum() != "undefined") {
             var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
-
+            console.log("player Instance " + clientInstance.getLobbyNum());
             //check if disconnecting user was host.
             if (CurrentlyConnectedlobby.getPlayer1ID() === clientInstance.getId()) {
 

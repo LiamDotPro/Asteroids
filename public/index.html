@@ -52,6 +52,10 @@
             //get canvas object
             canvasobj = new Canvas(playerobj, socket);
 
+            //Hide Elements early incase of network strain
+            $('#lobbies').css("display", 'none');
+            $('.userLobby').css("display", 'none');
+
             //programitcally create canvas element and get values from canvas class
             canvas = document.getElementById('canvas').appendChild(canvasobj.createCanvas("front menu"));
             canvasobj.modifyCanvas(canvas, "front menu");
@@ -75,7 +79,6 @@
                     });
                 });
 
-                $('#lobbies').css("display", 'none');
             });
         });
 
@@ -152,7 +155,7 @@
                 $("#lobby").append("<p id='" + data.players[i] + "'>" + data.players[i] + "</p>");
             }
 
-            $("#obby").css("display", "");
+            $(".userLobby").css("display", "");
 
             //player has joined a lobby modify the canvas to show the lobby waiting room.
             canvasobj.modifyCanvas(canvas, "game lobby");
@@ -175,6 +178,7 @@
         //A user has joined the lobby you are in.
         socket.on("UserJoinedYourLobby", function (data) {
             console.log("Player " + data.playerID + " has joined the lobby");
+            $("#lobby").append("<p id='" + data.playerID + "'>" + data.playerID + "</p>");
         });
 
         //player has left a lobby you are connected to.
