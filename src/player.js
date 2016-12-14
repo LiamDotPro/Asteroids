@@ -7,6 +7,11 @@
     this.playerSocket = socket;
     this.playerID = id;
 
+    //gets the players id
+    this.getId = function () {
+        return this.playerID;
+    }
+
     //gets the location of the user
     this.getLocation = function () {
         return this.location;

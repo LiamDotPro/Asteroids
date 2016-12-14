@@ -14,14 +14,20 @@
 <body>
     <h1 id="id"></h1>
     <div id="controls"><h1>Enter</h1></div>
+    <div id="lobbyControls">
+        <input class='btn btn-default' id='startButtonBtn' value='Start Game' />
+        <input class='btn btn-default' id='readyButtonBtn' value='Ready up' />
+        <input class='btn btn-default' id='LeaveButtonBtn' value='leave' />
+    </div>
     <div id="lobbies">
         <div id="lobbyRow" class="row lobbyRow">
 
         </div>
     </div>
     <div class="userLobby">
+        <h1>Currently Connected Users:</h1>
         <div id="lobby">
-            <h1>Currently Connected Users:</h1>
+           
         </div>
     </div>
     <div class="container-fluid">
@@ -55,6 +61,7 @@
             //Hide Elements early incase of network strain
             $('#lobbies').css("display", 'none');
             $('.userLobby').css("display", 'none');
+            $('#lobbyControls').css("display", 'none');
 
             //programitcally create canvas element and get values from canvas class
             canvas = document.getElementById('canvas').appendChild(canvasobj.createCanvas("front menu"));
@@ -130,6 +137,7 @@
             return assignedArrayTemp;
         }
 
+        //notifys the client the room they are trying to join is full!
         socket.on('lobbyFull', function () {
             alert("The lobby you tried to join is full!");
         });
@@ -143,19 +151,32 @@
         //Notifys client they have joined the lobby
         socket.on('userJoinedLobby', function (data) {
             canvasobj.getPlayer().joinedLobby(data.lobbyID);
-            //render the user into the lobby they joined
 
+            //render the user into the lobby they joined
             lobbyTag.style.display = "none";
             controlsTag.style.display = "none";
 
             //Logs Clients currently connected to the room
             console.log("users in room:" + data.players);
 
+            // add users to the list
             for (var i = 0; i < data.players.length; i++) {
-                $("#lobby").append("<p id='" + data.players[i] + "'>" + data.players[i] + "</p>");
+                if (data.players[i] === canvasobj.getPlayer().getId() && data.type === 'host') {
+                    $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (You) (Host) </p> ");
+                } else if (data.players[i] === canvasobj.getPlayer().getId() && data.type === 'player') {
+                    $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (You) </p>");
+                } else {
+                    $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (Host) </p>");
+                }
+                
+            }
+
+            if (data.type === "player") {
+                $("#startButtonBtn").css("display", "none");
             }
 
             $(".userLobby").css("display", "");
+            $("#lobbyControls").css("display", "");
 
             //player has joined a lobby modify the canvas to show the lobby waiting room.
             canvasobj.modifyCanvas(canvas, "game lobby");
@@ -178,7 +199,7 @@
         //A user has joined the lobby you are in.
         socket.on("UserJoinedYourLobby", function (data) {
             console.log("Player " + data.playerID + " has joined the lobby");
-            $("#lobby").append("<p id='" + data.playerID + "'>" + data.playerID + "</p>");
+            $("#lobby").append("<p id='" + data.playerID + "' style='color:red;'>" + data.playerID + "</p>");
         });
 
         //player has left a lobby you are connected to.
@@ -194,6 +215,10 @@
             canvasobj.modifyCanvas(canvas, "lobby menu");
 
             $(".userLobby").css("display", "none");
+            $("#lobbies").css("display", "");
+            $("#controls").css("display", "");
+            $("#lobbyControls").css("display", "none");
+            $("#lobby").empty();
         });
 
 

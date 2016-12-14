@@ -1,32 +1,60 @@
 ﻿#controls {
     z-index: 901;
+    position: absolute;
 }
 
-    #controls h1 {
-        z-index: 901;
-        color: white;
-        position: absolute;
-        margin-top: 500px;
-        margin-left: 562px;
-        font-family: arial;
-        font-size: 65px;
-    }
+#lobbyControls #startButtonBtn {
+    position: absolute;
+    z-index: 900;
+    margin-top:600px;
+    margin-left: 20px;
+}
 
-    #controls #lobbyBtn {
-        z-index: 901;
-        position: absolute;
-        margin-top: 630px;
-        margin-left: 270px;
-        font-size: 20px;
-    }
+#lobbyControls #readyButtonBtn {
+    position: absolute;
+    z-index: 900;
+    margin-top:600px;
+    margin-left: 200px;
+}
 
-    #controls #createLobbyBtn {
-        z-index: 901;
-        position: absolute;
-        margin-top: 630px;
-        margin-left: 20px;
-        font-size: 20px;
-    }
+#lobbyControls #LeaveButtonBtn {
+    position: absolute;
+    z-index: 900;
+    margin-top:600px;
+    margin-left: 380px;
+}
+
+
+
+#controls h1 {
+    z-index: 901;
+    color: white;
+    position: absolute;
+    margin-top: 500px;
+    margin-left: 562px;
+    font-family: arial;
+    font-size: 65px;
+}
+
+#controls #lobbyBtn {
+    z-index: 901;
+    position: absolute;
+    margin-top: 630px;
+    margin-left: 270px;
+    font-size: 20px;
+}
+
+#controls #createLobbyBtn {
+    z-index: 901;
+    position: absolute;
+    margin-top: 630px;
+    margin-left: 20px;
+    font-size: 20px;
+}
+
+#lobbyControls {
+    z-index: 901;
+}
 
 #lobbies {
     max-width: 1260px;

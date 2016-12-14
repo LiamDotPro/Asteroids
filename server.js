@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
                     secondPlayer.setLobbyNum(0);
                 }
 
-
+                 
                 //notify clients that lobby has been removed - host.
                 io.emit('removeLobby', {
                     lobbyID: CurrentlyConnectedlobby.getLobbyID()
@@ -166,7 +166,8 @@ io.on('connection', function (socket) {
         socket.emit('userJoinedLobby', {
             lobbyID: clientInstance.getLobbyNum(),
             //only emit this clients id as it's a newly defined lobby
-            players: [clientInstance.getId()]
+            players: [clientInstance.getId()],
+            type: 'host'
         });
     });
 
@@ -207,7 +208,8 @@ io.on('connection', function (socket) {
         //notify 
         socket.emit('userJoinedLobby', {
             lobbyID: selLobby.getLobbyID(),
-            players: [selLobby.getPlayer1ID(), clientInstance.getId()]
+            players: [selLobby.getPlayer1ID(), clientInstance.getId()],
+            type: 'player'
         });
 
         //updates all of the clients that the lobby number has changed
