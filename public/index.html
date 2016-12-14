@@ -172,7 +172,7 @@
 
         //removes the selected element from the dom.
         socket.on("removeLobby", function (data) {
-            $("#" + data.lobbyID).remove();
+            $("#" + data.lobbyID).parent().remove();
         });
 
         //A user has joined the lobby you are in.
@@ -184,11 +184,16 @@
         //player has left a lobby you are connected to.
         socket.on("playerLeftLobby", function (data) {
             console.log("player " + data.playerID + " has left the lobby.");
+            $("#" + data.playerID).remove();
         });
 
         //Triggered when you are connected to a lobby and the host leaves.
         socket.on("HostClosedLobby", function (data) {
             console.log("Host closed the lobby you are in!");
+
+            canvasobj.modifyCanvas(canvas, "lobby menu");
+
+            $(".userLobby").css("display", "none");
         });
 
 

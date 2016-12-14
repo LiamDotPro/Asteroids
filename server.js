@@ -45,18 +45,26 @@ io.on('connection', function (socket) {
 
         //Check to see if the disconnecting user was in a lobby.
         if (clientInstance.getLobbyNum() !== 0 && typeof clientInstance.getLobbyNum() != "undefined") {
+            console.log(lobbys);
             var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
             console.log("player Instance " + clientInstance.getLobbyNum());
+            console.log(clientInstance);
+            console.log(CurrentlyConnectedlobby);
             //check if disconnecting user was host.
             if (CurrentlyConnectedlobby.getPlayer1ID() === clientInstance.getId()) {
 
-
                 if (CurrentlyConnectedlobby.getPlayer2ID() != "") {
+
+                    console.log(CurrentlyConnectedlobby.getPlayer2ID());
 
                     //another player is connected to the lobby
                     io.to(CurrentlyConnectedlobby.getPlayer2ID()).emit("HostClosedLobby", {
 
                     });
+
+                    //set the second players lobby number as 0 as lobby is closed.
+                    var secondPlayer = allConnectedClients.get(CurrentlyConnectedlobby.getPlayer2ID());
+                    secondPlayer.setLobbyNum(0);
                 }
 
 
