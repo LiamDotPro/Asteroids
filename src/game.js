@@ -71,6 +71,26 @@
         return this.lobbyStatus;
     }
 
+    //sets a players status within the lobby
+    this.setPlayerStatus = function (playerID) {
+        if (playerID === this.player1ID) {
+            this.player1Status = this.player1Status ? false : true;
+            logPlayerStatus(playerID, this.player1Status ? "Set status to ready" : "Set status to not ready");
+        } else if (playerID === this.player2ID) {
+            this.player2Status = this.player2Status ? false : true;
+            logPlayerStatus(playerID, this.player2Status ? "Set status to ready" : "Set status to not ready");
+        } else {
+            console.log("When setting a player status there ID was not found.");
+        }
+
+
+    }
+
+    //Gives report of activity in game when using ternary above.
+    function logPlayerStatus(playerID, status){
+        console.log(playerID + " In lobby" + this.lobbyID + " " + );
+    }
+
 }
 
 module.exports = Game;

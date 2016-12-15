@@ -17,7 +17,7 @@
     margin-left: 200px;
 }
 
-#lobbyControls #LeaveButtonBtn {
+#lobbyControls #leaveButtonBtn {
     position: absolute;
     z-index: 900;
     margin-top:600px;

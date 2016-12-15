@@ -1,6 +1,6 @@
 ﻿function player(id, socket) {
 
-    this.lobbyNum = 0;
+    this.lobbyID = 0;
     this.lobbyStatus = false;
 
     this.location = "Not Loaded";
@@ -15,6 +15,11 @@
     //gets the location of the user
     this.getLocation = function () {
         return this.location;
+    }
+
+    //gets the lobby ID
+    this.getLobbyID = function () {
+        return this.lobbyID;
     }
 
     //sets the location of the user

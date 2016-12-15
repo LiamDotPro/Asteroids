@@ -236,4 +236,18 @@ io.on('connection', function (socket) {
         });
 
     });
+
+    //triggered when a player in a lobby attempts to ready up
+    socket.on('playerAttemptingToReady', function (data) {
+
+        if (!lobbys.has(data.lobbyID)) {
+            console.log("Game not found in map when attemping to ready up Lobby Number: " + data.lobbyID);
+            console.log(lobbys);
+            return;
+        }
+
+        var connectedLobby = lobbys.get(data.lobbyID);
+
+        connectedLobby.setPlayerStatus(data.playerID);
+    });
 });

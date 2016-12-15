@@ -17,7 +17,7 @@
     <div id="lobbyControls">
         <input class='btn btn-default' id='startButtonBtn' value='Start Game' />
         <input class='btn btn-default' id='readyButtonBtn' value='Ready up' />
-        <input class='btn btn-default' id='LeaveButtonBtn' value='leave' />
+        <input class='btn btn-default' id='leaveButtonBtn' value='leave' />
     </div>
     <div id="lobbies">
         <div id="lobbyRow" class="row lobbyRow">
@@ -27,7 +27,7 @@
     <div class="userLobby">
         <h1>Currently Connected Users:</h1>
         <div id="lobby">
-           
+
         </div>
     </div>
     <div class="container-fluid">
@@ -168,12 +168,46 @@
                 } else {
                     $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (Host) </p>");
                 }
-                
             }
 
+            //remove start game button from display if not host
             if (data.type === "player") {
                 $("#startButtonBtn").css("display", "none");
             }
+
+            //binds new event buttons as delegates
+            document.getElementById("lobbyControls").addEventListener("click", function (e) {
+
+                switch (e.target.id) {
+                    case "startButtonBtn":
+                        console.log("Player attemping to start game");
+                        break;
+                    case "readyButtonBtn":
+                        console.log("Player attempting to ready up");
+
+                        socket.emit('playerAttemptingToReady', {
+                            lobbyID: canvasobj.getPlayer().getLobbyID(),
+                            playerID: canvasobj.getPlayer().getId()
+                        });
+
+                        console.log($("#" + canvasobj.getPlayer().getId()).css('color'));
+
+                        if ($("#" + canvasobj.getPlayer().getId()).css('color') == "rgb(255, 0, 0)") {
+                            $("#" + canvasobj.getPlayer().getId()).css('color', 'green');
+                        } else {
+                            $("#" + canvasobj.getPlayer().getId()).css('color', 'red');
+                        }
+
+
+                            break;
+                    case "leaveButtonBtn":
+                        console.log("player attemping to leave lobby");
+
+
+                        break;
+                }
+
+            });
 
             $(".userLobby").css("display", "");
             $("#lobbyControls").css("display", "");
