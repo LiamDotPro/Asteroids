@@ -247,7 +247,14 @@ io.on('connection', function (socket) {
         }
 
         var connectedLobby = lobbys.get(data.lobbyID);
-
         connectedLobby.setPlayerStatus(data.playerID);
+
+        socket.broadcast.to(connectedLobby.getLobbyID()).emit('AnotherPlayerHasReady', {
+            playerID: data.playerID,
+            playerReadyState: connectedLobby.getPlayerStatus(data.playerID)
+        });
+
+
     });
+
 });

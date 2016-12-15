@@ -75,10 +75,10 @@
     this.setPlayerStatus = function (playerID) {
         if (playerID === this.player1ID) {
             this.player1Status = this.player1Status ? false : true;
-            logPlayerStatus(playerID, this.player1Status ? "Set status to ready" : "Set status to not ready");
+            logPlayerStatus(playerID, this.player1Status ? "Set status to ready" : "Set status to not ready", this.lobbyID);
         } else if (playerID === this.player2ID) {
             this.player2Status = this.player2Status ? false : true;
-            logPlayerStatus(playerID, this.player2Status ? "Set status to ready" : "Set status to not ready");
+            logPlayerStatus(playerID, this.player2Status ? "Set status to ready" : "Set status to not ready", this.lobbyID);
         } else {
             console.log("When setting a player status there ID was not found.");
         }
@@ -87,8 +87,17 @@
     }
 
     //Gives report of activity in game when using ternary above.
-    function logPlayerStatus(playerID, status){
-        console.log(playerID + " In lobby" + this.lobbyID + " " + );
+    function logPlayerStatus(playerID, status, lobbyID) {
+        console.log(playerID + " In lobby " + lobbyID + " " + status);
+    }
+
+    //gets the players status in the lobby based off playerID
+    this.getPlayerStatus = function (playerID) {
+        if (playerID === this.player1ID) {
+            return this.player1Status;
+        } else {
+            return this.player2Status;
+        }
     }
 
 }

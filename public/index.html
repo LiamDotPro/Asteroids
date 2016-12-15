@@ -255,6 +255,11 @@
             $("#lobby").empty();
         });
 
+        //Triggered when another user in the lobby has hit ready up
+        socket.on('AnotherPlayerHasReady', function (data) {
+            $("#" + data.playerID).css("color", data.playerReadyState ? "green":"red");
+        });
+
 
     </script>
 
