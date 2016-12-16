@@ -67,7 +67,7 @@ io.on('connection', function (socket) {
                     secondPlayer.setLobbyNum(0);
                 }
 
-                 
+
                 //notify clients that lobby has been removed - host.
                 io.emit('removeLobby', {
                     lobbyID: CurrentlyConnectedlobby.getLobbyID()
@@ -202,13 +202,14 @@ io.on('connection', function (socket) {
 
         //notify others in the lobby you've joined.
         socket.broadcast.to(selLobby.getLobbyID()).emit("UserJoinedYourLobby", {
-            playerID : clientInstance.getId()
+            playerID: clientInstance.getId()
         });
 
         //notify 
         socket.emit('userJoinedLobby', {
             lobbyID: selLobby.getLobbyID(),
             players: [selLobby.getPlayer1ID(), clientInstance.getId()],
+            p1Status: selLobby.getPlayerStatus(selLobby.getPlayer1ID()),
             type: 'player'
         });
 
@@ -257,4 +258,73 @@ io.on('connection', function (socket) {
 
     });
 
+    //triggered when a player in a lobby try to disconnect
+    socket.on('playerAttemptingToDisconnect', function (data) {
+        console.log("Player attempting to leave via button");
+        var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
+
+        //Check to see if the disconnecting user was in a lobby.
+        if (clientInstance.getLobbyNum() !== 0 && typeof clientInstance.getLobbyNum() != "undefined") {
+
+            var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
+
+            //check if disconnecting user was host.
+            if (CurrentlyConnectedlobby.getPlayer1ID() === clientInstance.getId()) {
+
+                if (CurrentlyConnectedlobby.getPlayer2ID() != "") {
+
+                    console.log(CurrentlyConnectedlobby.getPlayer2ID());
+
+                    //another player is connected to the lobby
+                    io.to(CurrentlyConnectedlobby.getPlayer2ID()).emit("HostClosedLobby", {
+
+                    });
+
+                    //set the second players lobby number as 0 as lobby is closed.
+                    var secondPlayer = allConnectedClients.get(CurrentlyConnectedlobby.getPlayer2ID());
+                    secondPlayer.setLobbyNum(0);
+
+
+                }
+
+
+                //notify clients that lobby has been removed - host.
+                io.emit('removeLobby', {
+                    lobbyID: CurrentlyConnectedlobby.getLobbyID()
+                });
+
+                console.log("Srv -> Client Lobby " + CurrentlyConnectedlobby.getLobbyID() + " Has been Removed");
+
+                //safely destroy instance from map.
+                lobbys.delete(CurrentlyConnectedlobby.getLobbyID());
+                //The clients lobby instance is reset
+                clientInstance.setLobbyNum(0);
+
+                //change the players state.
+                socket.emit('leftLobby', {});
+            } else {
+
+                console.log(CurrentlyConnectedlobby.getLobbyID());
+                clientInstance.setLobbyNum(0);
+
+                //notifys lobby the player has left - not host.
+                io.to(CurrentlyConnectedlobby.getLobbyID()).emit("playerLeftLobby", {
+                    playerID: clientInstance.getId()
+                });
+
+                //Player two from a lobby has left, notify all clients and update lobby board
+                io.emit('updateLobbyPlayers', {
+                    lobbyID: CurrentlyConnectedlobby.getLobbyID(),
+                    players: 1
+                });
+
+                //Setting player 2 ID as nothing to repsent not connected in lobby.
+                CurrentlyConnectedlobby.setPlayer2("");
+
+                socket.emit('leftLobby', {});
+
+                console.log("Srv -> Client Player 2 Has left " + CurrentlyConnectedlobby.getLobbyID());
+            }
+        }
+    });
 });

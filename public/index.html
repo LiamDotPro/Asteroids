@@ -166,7 +166,9 @@
                 } else if (data.players[i] === canvasobj.getPlayer().getId() && data.type === 'player') {
                     $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (You) </p>");
                 } else {
-                    $("#lobby").append("<p id='" + data.players[i] + "' style='color:red;'>" + data.players[i] + " (Host) </p>");
+                    console.log(data.p1Status);
+                    var color = data.p1Status ? "style='color:green;'" : "style='color:red;'";
+                    $("#lobby").append("<p id='" + data.players[i] + "'" + color +">" + data.players[i] + " (Host) </p>");
                 }
             }
 
@@ -197,12 +199,14 @@
                         } else {
                             $("#" + canvasobj.getPlayer().getId()).css('color', 'red');
                         }
-
-
-                            break;
+                        break;
                     case "leaveButtonBtn":
                         console.log("player attemping to leave lobby");
 
+                        //notify the sever that the client is trying to disconnect
+                        socket.emit('playerAttemptingToDisconnect', {
+
+                        });
 
                         break;
                 }
@@ -257,9 +261,21 @@
 
         //Triggered when another user in the lobby has hit ready up
         socket.on('AnotherPlayerHasReady', function (data) {
-            $("#" + data.playerID).css("color", data.playerReadyState ? "green":"red");
+            $("#" + data.playerID).css("color", data.playerReadyState ? "green" : "red");
         });
 
+        //triggered when the server notifys you that you've left the lobby.
+        socket.on('leftLobby', function (data) {
+            console.log("You have successfully left the lobby!");
+
+            canvasobj.modifyCanvas(canvas, "lobby menu");
+
+            $(".userLobby").css("display", "none");
+            $("#lobbies").css("display", "");
+            $("#controls").css("display", "");
+            $("#lobbyControls").css("display", "none");
+            $("#lobby").empty();
+        });
 
     </script>
 
