@@ -3,7 +3,12 @@
     //canvas properties
     this.player = player;
     this.socket = socket;
-    this.lobbys = new Map();
+    this.lobby;
+
+    //sets a local game to the canvas.
+    this.setLocalGame = function (localGame) {
+        this.lobby = localGame;
+    }
 
     //gets the associtated player instance
     this.getPlayer = function () {
@@ -43,7 +48,7 @@
     }
 
     //Modifys each canvas so it has the correct setup for where the user is
-    this.modifyCanvas = function (canvas, stage) {
+    this.modifyCanvas = function (canvas, stage, props) {
 
         if (!isNaN(stage) || stage == "") {
             throw "Passed incorrect type or empty string";
@@ -70,6 +75,8 @@
                 ctx.fillStyle = "#000000";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 this.createCanvasText(ctx, "40px Arial", "white", "Lobby Menu", 30, 50);
+
+                this.player.serverClientLocation("lobby menu");
                 break;
 
             case "game lobby":
@@ -81,12 +88,25 @@
                 this.player.serverClientLocation("game lobby");
 
                 break;
+
+            case "game":
+                console.log("rendering the game canvas");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                //props should hold spaceships and asteroids[spaceships[] -> asteroids[]]
+                requestAnimationFrame(this.render(canvas));
+
+
+                this.player.serverClientLocation("ingame");
+                break;
         }
     }
 
     //constructs a user defined lobby
-    this.constructUserLobby = function(canvas, otherUser, lobbyTitle){
-    
+    this.constructUserLobby = function (canvas, otherUser, lobbyTitle) {
+
         var ctx = canvas.getContext("2d");
         this.createCanvasText(ctx, "26px Arial", "white", "Game Lobby: " + lobbyTitle, 30, 50);
 
@@ -100,11 +120,26 @@
         console.log("Text Has been drawn" + ctx, font, color, text, x, y);
     }
 
-    //Creates a new instance of lobby object inside the canvas
-    this.lobbyCreated = function (lobbyID, players) {
-        this.lobbys.set(lobbyID, new localGame());
-        console.log("New lobby made : " + lobbyID);
-        console.log("This Lobby has: " + players + " Players");
+
+    //creates the players spaceship on the canvas.
+    this.drawPlayerSpaceship = function (canvas) {
+        var ctx = canvas.getContext('2d');
+
+        ctx.fillStyle = "#ffffff";
+
+        ctx.beginPath();
+        ctx.moveTo(75, 50);
+        ctx.lineTo(100, 75);
+        ctx.lineTo(100, 25);
+        ctx.lineTo(75, 50);
+        ctx.strokeStyle = "white";
+        ctx.stroke();
+
+    }
+
+    //rendering function use in the game
+    function render(canvas) {
+        this.drawPlayerSpaceship(canvas);
     }
 
 }

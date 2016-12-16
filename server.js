@@ -258,6 +258,43 @@ io.on('connection', function (socket) {
 
     });
 
+    //triggered when a player attempts to start a new game
+    socket.on('playerAtemptingToStartGame', function (data) {
+
+        var selectedLobby = lobbys.get(data.lobbyID);
+
+        if (!(selectedLobby.getLobbyStatus() === "InLobby" && selectedLobby.getPlayerReadStatus())) {
+            console.log("Both players are not ready or only one player present.");
+            socket.emit('failedToStartGame', {
+
+            })
+            return;
+        }
+
+        console.log("Srv " + data.lobbyID + " game is being started.");
+
+        //create both the spaceships and set initial states.
+        var ship1 = new Spaceship(640, 200);
+        var ship2 = new Spaceship(640, 400);
+        selectedLobby.createPlayerSpaceship(ship1, ship2);
+
+        //set lobby status as playing
+        selectedLobby.setLobbyStatus("Playing");
+
+        //notify all clients in lobby game has started and to build game.
+        io.to(selectedLobby.getPlayer1ID()).emit('gameStart', {
+            you: [640, 200],
+            other: [640, 400]
+        });
+
+        io.to(selectedLobby.getPlayer2ID()).emit('gameStart', {
+            you: [640, 400],
+            other: [640, 200]
+        })
+
+
+    });
+
     //triggered when a player in a lobby try to disconnect
     socket.on('playerAttemptingToDisconnect', function (data) {
         console.log("Player attempting to leave via button");

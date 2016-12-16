@@ -1,4 +1,4 @@
-﻿var Spaceship = function spaceship(x, y, playerControls) {
+﻿var Spaceship = function spaceship(x, y) {
 
     //small form locations.
     this.x = x;
@@ -12,12 +12,6 @@
 
     //spaceship speed
     this.thrusterSpeed = 20;
-
-    //spaceship movement controls
-    this.forward = playerControls[0];
-    this.left = playerControls[1];
-    this.right = playerControls[2];
-    this.down = playerControls[3];
 
     //spaceship health and shield
     this.health = 100;

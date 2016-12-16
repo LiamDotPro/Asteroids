@@ -40,16 +40,9 @@
     }
 
     //sets the instance of spaceship to the game
-    this.createPlayerSpaceship = function (playerID, spaceship) {
-        if ((playerID !== 1 || playerID !== 2) && spaceship !== null && spaceship instanceof Spaceship) {
-            if (playerID === 1) {
-                //update player 1 with a spaceship
-                this.player1 = spaceship;
-            } else {
-                //update player 2 with a spaceship
-                this.player2 = spaceship;
-            }
-        }
+    this.createPlayerSpaceship = function (spaceshipP1, spaceshipP2) {
+        this.player1Spaceship = spaceshipP1;
+        this.player2Spaceship = spaceshipP2;
     }
 
     //finds if a second player is connected
@@ -98,6 +91,11 @@
         } else {
             return this.player2Status;
         }
+    }
+
+    //gets the status of both players
+    this.getPlayerReadStatus = function () {
+        return this.player1Status && this.player2Status ? true : false;
     }
 
 }

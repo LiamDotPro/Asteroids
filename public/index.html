@@ -42,6 +42,7 @@
 
     <script type="text/javascript" src="/src/Canvas.js"></script>
     <script type="text/javascript" src="/src/Player.js"></script>
+    <script type="text/javascript" src="/src/localSpaceship.js"></script>
     <script type="text/javascript" src="/src/localGame.js"></script>
     <script>
         var socket = io();
@@ -144,7 +145,6 @@
 
         //notifys the user a lobby has been created
         socket.on('lobbyCreated', function (data) {
-            canvasobj.lobbyCreated(data.lobbyID, data.players);
             $(".lobbyRow").append("<div  class='col-xs-3 lobbyTile'><div id='" + data.lobbyID + "' class='lobbyDiv'><h5>ID:" + data.lobbyID + " </h5><h5>Players: 1</h5>  <input class='btn btn-default joinLobbyBtn' value='Join' /></div></div>");
         });
 
@@ -168,7 +168,7 @@
                 } else {
                     console.log(data.p1Status);
                     var color = data.p1Status ? "style='color:green;'" : "style='color:red;'";
-                    $("#lobby").append("<p id='" + data.players[i] + "'" + color +">" + data.players[i] + " (Host) </p>");
+                    $("#lobby").append("<p id='" + data.players[i] + "'" + color + ">" + data.players[i] + " (Host) </p>");
                 }
             }
 
@@ -183,6 +183,13 @@
                 switch (e.target.id) {
                     case "startButtonBtn":
                         console.log("Player attemping to start game");
+
+                        //tell the sever the player is trying to start the game.
+                        socket.emit('playerAtemptingToStartGame', {
+                            lobbyID: canvasobj.getPlayer().getLobbyID(),
+                            playerID: canvasobj.getPlayer().getId()
+                        })
+
                         break;
                     case "readyButtonBtn":
                         console.log("Player attempting to ready up");
@@ -275,6 +282,26 @@
             $("#controls").css("display", "");
             $("#lobbyControls").css("display", "none");
             $("#lobby").empty();
+        });
+
+        //triggered when a game has been started on the server.
+        socket.on('gameStart', function (data) {
+
+            //remove client dom before loading canvas
+            $(".userLobby").css("display", "none");
+            $("#lobbies").css("display", "none");
+            $("#controls").css("display", "none");
+            $("#lobbyControls").css("display", "none");
+            $("#lobby").empty();
+
+            //Your spaceship co-ordinates and other players co-ordinates
+            var yourSpaceship = data.you;
+            var thereSpaceship = data.other;
+
+            //create a new instance of localgame
+            canvasobj.setLocalGame(new localGame());
+
+            canvasobj.modifyCanvas(canvas, "game");
         });
 
     </script>
