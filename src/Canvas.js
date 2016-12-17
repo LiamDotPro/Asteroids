@@ -4,6 +4,7 @@
     this.player = player;
     this.socket = socket;
     this.lobby;
+    this.canvas;
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
@@ -44,6 +45,9 @@
         canvas.height = height;
         canvas.style.zIndex = zIndex;
         canvas.style.position = "absolute";
+
+        this.canvas = canvas;
+
         return canvas;
     }
 
@@ -96,8 +100,7 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 //props should hold spaceships and asteroids[spaceships[] -> asteroids[]]
-                requestAnimationFrame(this.render(canvas));
-
+                requestAnimationFrame(this.render);
 
                 this.player.serverClientLocation("ingame");
                 break;
@@ -121,25 +124,34 @@
     }
 
 
-    //creates the players spaceship on the canvas.
-    this.drawPlayerSpaceship = function (canvas) {
+    //rendering function use in the game
+    this.render = function () {
         var ctx = canvas.getContext('2d');
 
-        ctx.fillStyle = "#ffffff";
+        var side = 20;
+
+        var h = 80 * (Math.sqrt(3) / 2);
+
+
+
+        ctx.translate(300, 400);
 
         ctx.beginPath();
-        ctx.moveTo(75, 50);
-        ctx.lineTo(100, 75);
-        ctx.lineTo(100, 25);
-        ctx.lineTo(75, 50);
+
+        ctx.moveTo(0, -h / 2);
+        ctx.lineTo(-side / 2, h / 2);
+        ctx.lineTo(side / 2, h / 2);
+        ctx.lineTo(0, -h / 2);
+        
+
+
+      
+
         ctx.strokeStyle = "white";
+
         ctx.stroke();
 
-    }
-
-    //rendering function use in the game
-    function render(canvas) {
-        this.drawPlayerSpaceship(canvas);
+        ctx.closePath();
     }
 
 }
