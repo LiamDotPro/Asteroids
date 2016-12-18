@@ -3,13 +3,13 @@
     //canvas properties
     this.player = player;
     this.socket = socket;
-    this.lobby;
+    this.localGame;
     this.canvas;
-    this.speed = 0.1;
+    this.ctx;
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
-        this.lobby = localGame;
+        this.localGame = localGame;
     }
 
     //gets the associtated player instance
@@ -48,6 +48,7 @@
         canvas.style.position = "absolute";
 
         this.canvas = canvas;
+        this.ctx = canvas.getContext("2d");
 
         return canvas;
     }
@@ -124,19 +125,38 @@
     }
 
 
-    //rendering function use in the game
+    //This is used to render our players and asteroids using the local game
     this.render = function () {
 
-        var ctx = this.canvas.getContext('2d');
+        var ctx = this.canvas.getContext("2d");
+
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        //render the spaceships onto the canvas using there co-ordinates
+        renderSpaceShip(this.localGame.getPlayerSpaceship().getX(), this.localGame.getPlayerSpaceship().getY());
+        renderSpaceShip(this.localGame.getOpponenetSpaceship().getX(), this.localGame.getOpponenetSpaceship().getY());
+
+    }
+
+    //This is used to capture events driven by the players
+    this.update = function () {
+
+    }
+
+    function renderSpaceShip(x, y) {
+
+        var ctx = this.canvas.getContext("2d");
 
         var side = 40;
 
         var h = side * (Math.sqrt(3) / 2);
 
-        console.log(h);
+        ctx.save();
 
         //This holds where the triangle should be
-        ctx.translate(300 + this.speed, 400 + this.speed);
+        ctx.translate(x, y);
 
         ctx.beginPath();
 
@@ -147,11 +167,11 @@
 
         ctx.strokeStyle = "white";
 
+        ctx.closePath();
+
         ctx.stroke();
 
-
-        this.speed += 0.1;
-        console.log(this.speed + " end");
+        ctx.restore();
     }
 
 }

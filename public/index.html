@@ -299,19 +299,20 @@
             var thereSpaceship = data.other;
 
             //create a new instance of localgame
-            canvasobj.setLocalGame(new localGame());
+            canvasobj.setLocalGame(new localGame(yourSpaceship, thereSpaceship));
             canvasobj.modifyCanvas(canvas, "game");
 
 
 
             main();
+            
 
         });
 
         function main() {
-            canvasobj.render();
-
             requestAnimationFrame(main);
+            canvasobj.render();
+            canvasoj.update();
         }
 
     </script>
