@@ -1,4 +1,9 @@
-﻿function localGame() {
+﻿function Spaceship() {
+
+}
+
+
+function localGame() {
 
     this.asteroids = [];
     

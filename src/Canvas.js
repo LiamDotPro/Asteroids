@@ -5,6 +5,7 @@
     this.socket = socket;
     this.lobby;
     this.canvas;
+    this.speed = 0.1;
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
@@ -100,7 +101,6 @@
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 //props should hold spaceships and asteroids[spaceships[] -> asteroids[]]
-                requestAnimationFrame(this.render);
 
                 this.player.serverClientLocation("ingame");
                 break;
@@ -126,15 +126,17 @@
 
     //rendering function use in the game
     this.render = function () {
-        var ctx = canvas.getContext('2d');
 
-        var side = 20;
+        var ctx = this.canvas.getContext('2d');
 
-        var h = 80 * (Math.sqrt(3) / 2);
+        var side = 40;
 
+        var h = side * (Math.sqrt(3) / 2);
 
+        console.log(h);
 
-        ctx.translate(300, 400);
+        //This holds where the triangle should be
+        ctx.translate(300 + this.speed, 400 + this.speed);
 
         ctx.beginPath();
 
@@ -142,16 +144,14 @@
         ctx.lineTo(-side / 2, h / 2);
         ctx.lineTo(side / 2, h / 2);
         ctx.lineTo(0, -h / 2);
-        
-
-
-      
 
         ctx.strokeStyle = "white";
 
         ctx.stroke();
 
-        ctx.closePath();
+
+        this.speed += 0.1;
+        console.log(this.speed + " end");
     }
 
 }

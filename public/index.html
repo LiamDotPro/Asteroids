@@ -300,9 +300,19 @@
 
             //create a new instance of localgame
             canvasobj.setLocalGame(new localGame());
-
             canvasobj.modifyCanvas(canvas, "game");
+
+
+
+            main();
+
         });
+
+        function main() {
+            canvasobj.render();
+
+            requestAnimationFrame(main);
+        }
 
     </script>
 
