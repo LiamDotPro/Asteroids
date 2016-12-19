@@ -12,6 +12,11 @@
         this.localGame = localGame;
     }
 
+    //gets the local game
+    this.getLocalGame = function () {
+        return this.localGame;
+    }
+
     //gets the associtated player instance
     this.getPlayer = function () {
         return this.player;
@@ -135,43 +140,13 @@
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
         //render the spaceships onto the canvas using there co-ordinates
-        renderSpaceShip(this.localGame.getPlayerSpaceship().getX(), this.localGame.getPlayerSpaceship().getY());
-        renderSpaceShip(this.localGame.getOpponenetSpaceship().getX(), this.localGame.getOpponenetSpaceship().getY());
-
+        this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
+        this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
     }
 
     //This is used to capture events driven by the players
     this.update = function () {
-
-    }
-
-    function renderSpaceShip(x, y) {
-
-        var ctx = this.canvas.getContext("2d");
-
-        var side = 40;
-
-        var h = side * (Math.sqrt(3) / 2);
-
-        ctx.save();
-
-        //This holds where the triangle should be
-        ctx.translate(x, y);
-
-        ctx.beginPath();
-
-        ctx.moveTo(0, -h / 2);
-        ctx.lineTo(-side / 2, h / 2);
-        ctx.lineTo(side / 2, h / 2);
-        ctx.lineTo(0, -h / 2);
-
-        ctx.strokeStyle = "white";
-
-        ctx.closePath();
-
-        ctx.stroke();
-
-        ctx.restore();
+     
     }
 
 }

@@ -302,17 +302,45 @@
             canvasobj.setLocalGame(new localGame(yourSpaceship, thereSpaceship));
             canvasobj.modifyCanvas(canvas, "game");
 
+            document.addEventListener('keydown', function (event) {
 
+                var playerSpaceship = canvasobj.getLocalGame().getPlayerSpaceship();
+
+                switch (event.keyCode) {
+                    case 87:
+                        //forward
+                        console.log("thrusting!");
+                        playerSpaceship.forwardMove();
+                        break;
+                    case 65:
+                        //turn left
+                        playerSpaceship.turnRight();
+                        break;
+
+                    case 68:
+                        //turn right
+                        playerSpaceship.turnLeft();
+                        break;
+                    case 83:
+                        //shield
+
+                        break;
+
+                }
+                // Cancel the default action to avoid it being handled twice
+                event.preventDefault();
+
+            },true);
 
             main();
-            
+
 
         });
 
         function main() {
             requestAnimationFrame(main);
             canvasobj.render();
-            canvasoj.update();
+            canvasobj.update();
         }
 
     </script>

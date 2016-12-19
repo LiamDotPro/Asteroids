@@ -16,6 +16,9 @@
     this.health = 100;
     this.shield = 100;
 
+    //The direction the spaceship is heading
+    this.direction = 0;
+
     //methods
 
     //get methods
@@ -39,21 +42,18 @@
         return this.thrusterSpeed;
     }
 
-    this.getForward = function () {
-        return this.forward;
+    this.forwardMove = function(){
+        this.y -= 5;
     }
 
-    this.getLeft = function () {
-        return this.left;
+    this.turnRight = function () {
+        this.direction += -0.1;
     }
 
-    this.getRight = function () {
-        return this.right;
+    this.turnLeft = function () {
+        this.direction += 0.1;
     }
 
-    this.getDown = function () {
-        return this.down;
-    }
 
     this.getLoc = function () {
         return this.loc;
@@ -133,6 +133,38 @@
         this.health = 100;
         this.shield = 100;
         this.thrusterSpeed = 20;
+    }
+
+    //render methods
+
+    this.renderSpaceShip = function(ctx) {
+
+        var ctx = ctx;
+
+        var side = 40;
+
+        var h = side * (Math.sqrt(3) / 2);
+
+        ctx.save();
+
+        //This holds where the triangle should be
+        ctx.translate(this.x, this.y);
+        ctx.rotate(this.direction);
+        ctx.beginPath();
+
+        ctx.moveTo(0, -h / 2);
+        ctx.lineTo(-side / 2, h / 2);
+        ctx.lineTo(side / 2, h / 2);
+        ctx.lineTo(0, -h / 2);
+
+        ctx.strokeStyle = "white";
+
+        ctx.closePath();
+
+        ctx.stroke();
+
+        ctx.restore();
+
     }
 }
 
