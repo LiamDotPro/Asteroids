@@ -320,12 +320,25 @@
 
         });
 
+
         function main() {
             requestAnimationFrame(main);
             canvasobj.render();
             canvasobj.update(keys);
 
         }
+
+        socket.on('moveOpponenetForward', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().forwardMove();
+        });
+
+        socket.on('moveOpponenetRight', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().turnRight();
+        });
+
+        socket.on('moveOpponenetLeft', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().turnLeft();
+        });
 
     </script>
 

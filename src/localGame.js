@@ -50,6 +50,7 @@
 
     this.turnRight = function () {
         this.direction += 0.11;
+
     }
 
     this.turnLeft = function () {
@@ -170,9 +171,7 @@
 
     }
 
-    socket.on('Something', function (data) {
-
-    });
+  
 }
 
 

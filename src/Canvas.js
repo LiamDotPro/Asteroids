@@ -148,14 +148,28 @@
     this.update = function (keycodeArr) {
         if (keycodeArr[87]) {
             this.localGame.getPlayerSpaceship().forwardMove();
+           
+            //tell the other player the opponenet has moved
+            socket.emit('opponenentMovedForward', {
+                lobbyID: this.player.getLobbyID()
+            });
+
         }
 
         if(keycodeArr[65]){
             this.localGame.getPlayerSpaceship().turnLeft();
+
+            socket.emit('opponenentMovedLeft', {
+                lobbyID: this.player.getLobbyID()
+            });
         }
 
         if (keycodeArr[68]) {
             this.localGame.getPlayerSpaceship().turnRight();
+
+            socket.emit('opponenentMovedRight', {
+                lobbyID: this.player.getLobbyID()
+            });
         }
     }
 

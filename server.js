@@ -364,4 +364,19 @@ io.on('connection', function (socket) {
             }
         }
     });
+
+    socket.on('opponenentMovedForward', function (data) {
+        socket.broadcast.to(data.lobbyID).emit("moveOpponenetForward", {});
+    });
+
+    socket.on('opponenentMovedLeft', function (data) {
+        socket.broadcast.to(data.lobbyID).emit("moveOpponenetLeft", {});
+    });
+
+    socket.on('opponenentMovedRight', function (data) {
+        socket.broadcast.to(data.lobbyID).emit("moveOpponenetRight", {});
+    });
+
+
+
 });
