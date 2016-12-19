@@ -52,6 +52,7 @@
         var lobbyTag = document.getElementById("lobbies");
         var controlsTag = document.getElementById("controls");
         var selectedID = "";
+        var keys = [];
         //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
             var playerobj = new player(data.id, socket);
@@ -302,36 +303,18 @@
             canvasobj.setLocalGame(new localGame(yourSpaceship, thereSpaceship));
             canvasobj.modifyCanvas(canvas, "game");
 
+            //capture keys pressed
+            document.addEventListener('keyup', function (event) {
+                keys[event.keyCode] = false;
+            });
+
+
             document.addEventListener('keydown', function (event) {
+                keys[event.keyCode] = true;
+            });
 
-                var playerSpaceship = canvasobj.getLocalGame().getPlayerSpaceship();
-
-                switch (event.keyCode) {
-                    case 87:
-                        //forward
-                        console.log("thrusting!");
-                        playerSpaceship.forwardMove();
-                        break;
-                    case 65:
-                        //turn left
-                        playerSpaceship.turnRight();
-                        break;
-
-                    case 68:
-                        //turn right
-                        playerSpaceship.turnLeft();
-                        break;
-                    case 83:
-                        //shield
-
-                        break;
-
-                }
-                // Cancel the default action to avoid it being handled twice
-                event.preventDefault();
-
-            },true);
-
+                
+    
             main();
 
 
@@ -340,7 +323,8 @@
         function main() {
             requestAnimationFrame(main);
             canvasobj.render();
-            canvasobj.update();
+            canvasobj.update(keys);
+
         }
 
     </script>

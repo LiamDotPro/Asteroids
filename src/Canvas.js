@@ -145,8 +145,18 @@
     }
 
     //This is used to capture events driven by the players
-    this.update = function () {
-     
+    this.update = function (keycodeArr) {
+        if (keycodeArr[87]) {
+            this.localGame.getPlayerSpaceship().forwardMove();
+        }
+
+        if(keycodeArr[65]){
+            this.localGame.getPlayerSpaceship().turnLeft();
+        }
+
+        if (keycodeArr[68]) {
+            this.localGame.getPlayerSpaceship().turnRight();
+        }
     }
 
 }

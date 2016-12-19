@@ -10,7 +10,8 @@
     this.projectiles = [];
 
     //spaceship speed
-    this.thrusterSpeed = 20;
+    this.thrusterSpeed = 2;
+    this.friction = 0.98;
 
     //spaceship health and shield
     this.health = 100;
@@ -43,15 +44,16 @@
     }
 
     this.forwardMove = function(){
-        this.y -= 5;
+        this.x += this.thrusterSpeed * Math.cos(this.direction);
+        this.y += this.thrusterSpeed * Math.sin(this.direction);
     }
 
     this.turnRight = function () {
-        this.direction += -0.1;
+        this.direction += 0.11;
     }
 
     this.turnLeft = function () {
-        this.direction += 0.1;
+        this.direction += -0.11;
     }
 
 
@@ -135,6 +137,7 @@
         this.thrusterSpeed = 20;
     }
 
+
     //render methods
 
     this.renderSpaceShip = function(ctx) {
@@ -149,7 +152,7 @@
 
         //This holds where the triangle should be
         ctx.translate(this.x, this.y);
-        ctx.rotate(this.direction);
+        ctx.rotate(this.direction + Math.PI / 2);
         ctx.beginPath();
 
         ctx.moveTo(0, -h / 2);
@@ -166,6 +169,10 @@
         ctx.restore();
 
     }
+
+    socket.on('Something', function (data) {
+
+    });
 }
 
 
@@ -192,4 +199,5 @@ function localGame(StartingLocationPlayer,StartingLocationOpp) {
     this.setOpponenentCoordinates = function () {
 
     }
+
 }
