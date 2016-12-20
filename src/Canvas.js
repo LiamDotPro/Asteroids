@@ -6,6 +6,8 @@
     this.localGame;
     this.canvas;
     this.ctx;
+    this.width = 1280;
+    this.height = 680;
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
@@ -34,7 +36,7 @@
 
         switch (stage) {
             case "front menu":
-                return this.buildCanvas(1280, 680, 666, 'rgba(158, 167, 184, 0.2)');
+                return this.buildCanvas(this.width, this.height, 666, 'rgba(158, 167, 184, 0.2)');
                 break;
             default:
                 console.log("you have entered an incorrect stage.")
@@ -146,9 +148,14 @@
 
     //This is used to capture events driven by the players
     this.update = function (keycodeArr) {
+
+        var playerShip = this.localGame.getPlayerSpaceship();
+        var oppShip = this.localGame.getOpponenetSpaceship();
+
+
         if (keycodeArr[87]) {
-            this.localGame.getPlayerSpaceship().forwardMove();
-           
+            playerShip.forwardMove();
+
             //tell the other player the opponenet has moved
             socket.emit('opponenentMovedForward', {
                 lobbyID: this.player.getLobbyID()
@@ -156,8 +163,8 @@
 
         }
 
-        if(keycodeArr[65]){
-            this.localGame.getPlayerSpaceship().turnLeft();
+        if (keycodeArr[65]) {
+            playerShip.turnLeft();
 
             socket.emit('opponenentMovedLeft', {
                 lobbyID: this.player.getLobbyID()
@@ -165,12 +172,57 @@
         }
 
         if (keycodeArr[68]) {
-            this.localGame.getPlayerSpaceship().turnRight();
+            playerShip.turnRight();
 
             socket.emit('opponenentMovedRight', {
                 lobbyID: this.player.getLobbyID()
             });
         }
+
+        //player spaceship
+
+        //finding if the x co-ordinates matchs left wall
+        if (playerShip.getX() <= 0) {
+            playerShip.setX(this.width -0.01);
+        } 
+
+        //finding if the x co-ordinates matchs right wall
+        if (playerShip.getX() >= this.width) {
+            playerShip.setX(0.01);
+        }
+
+        //finding if the x co-ordinates matchs bottom wall
+        if (playerShip.getY() <= 0) {
+            playerShip.setY(this.height -0.01);
+        }
+
+        //finding if the x co-ordinates matchs top wall
+        if (playerShip.getY() >= this.height) {
+            playerShip.setY(0.01);
+        }
+
+        //opponent spaceship
+
+        //finding if the x co-ordinates matchs left wall
+        if (oppShip.getX() <= 0) {
+            oppShip.setX(this.width - 0.01);
+        }
+
+        //finding if the x co-ordinates matchs right wall
+        if (oppShip.getX() >= this.width) {
+            oppShip.setX(0.01);
+        }
+
+        //finding if the x co-ordinates matchs bottom wall
+        if (oppShip.getY() <= 0) {
+            oppShip.setY(this.height - 0.01);
+        }
+
+        //finding if the x co-ordinates matchs top wall
+        if (oppShip.getY() >= this.height) {
+            oppShip.setY(0.01);
+        }
+
     }
 
 }
