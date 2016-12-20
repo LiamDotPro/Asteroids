@@ -144,6 +144,12 @@
         //render the spaceships onto the canvas using there co-ordinates
         this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
         this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
+
+        for (var i = 0; i < this.localGame.getAsteroidsArr().length; i++) {
+            this.localGame.getAsteroidsArr()[i].renderAsteroid(ctx);
+            this.localGame.getAsteroidsArr()[i].move();
+        }
+
     }
 
     //This is used to capture events driven by the players
@@ -151,6 +157,7 @@
 
         var playerShip = this.localGame.getPlayerSpaceship();
         var oppShip = this.localGame.getOpponenetSpaceship();
+        var asteroids = this.localGame.getAsteroidsArr();
 
 
         if (keycodeArr[87]) {
@@ -183,8 +190,8 @@
 
         //finding if the x co-ordinates matchs left wall
         if (playerShip.getX() <= 0) {
-            playerShip.setX(this.width -0.01);
-        } 
+            playerShip.setX(this.width - 0.01);
+        }
 
         //finding if the x co-ordinates matchs right wall
         if (playerShip.getX() >= this.width) {
@@ -193,7 +200,7 @@
 
         //finding if the x co-ordinates matchs bottom wall
         if (playerShip.getY() <= 0) {
-            playerShip.setY(this.height -0.01);
+            playerShip.setY(this.height - 0.01);
         }
 
         //finding if the x co-ordinates matchs top wall
@@ -221,6 +228,28 @@
         //finding if the x co-ordinates matchs top wall
         if (oppShip.getY() >= this.height) {
             oppShip.setY(0.01);
+        }
+
+        for (var i = 0; i < asteroids.length; i++) {
+            //finding if the x co-ordinates matchs left wall
+            if (asteroids[i].getX() <= 0) {
+                asteroids[i].setX(this.width - 0.01);
+            }
+
+            //finding if the x co-ordinates matchs right wall
+            if (asteroids[i].getX() >= this.width) {
+                asteroids[i].setX(0.01);
+            }
+
+            //finding if the x co-ordinates matchs bottom wall
+            if (asteroids[i].getY() <= 0) {
+                asteroids[i].setY(this.height - 0.01);
+            }
+
+            //finding if the x co-ordinates matchs top wall
+            if (asteroids[i].getY() >= this.height) {
+                asteroids[i].setY(0.01);
+            }
         }
 
     }

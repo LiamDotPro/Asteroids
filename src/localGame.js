@@ -10,7 +10,7 @@
     this.projectiles = [];
 
     //spaceship speed
-    this.thrusterSpeed = 2;
+    this.thrusterSpeed = 4;
     this.friction = 0.98;
 
     //spaceship health and shield
@@ -43,7 +43,7 @@
         return this.thrusterSpeed;
     }
 
-    this.forwardMove = function(){
+    this.forwardMove = function () {
         this.x += this.thrusterSpeed * Math.cos(this.direction);
         this.y += this.thrusterSpeed * Math.sin(this.direction);
     }
@@ -141,7 +141,7 @@
 
     //render methods
 
-    this.renderSpaceShip = function(ctx) {
+    this.renderSpaceShip = function (ctx) {
 
         var ctx = ctx;
 
@@ -169,13 +169,56 @@
 
         ctx.restore();
 
+
     }
 
-  
+
+}
+
+function Asteroid(x, y, size, dir, speed) {
+    this.x = x;
+    this.y = y;
+    this.size = size;
+    this.direction = dir;
+    this.speed = 2;
+
+    this.renderAsteroid = function (ctx) {
+        ctx.save();
+        ctx.strokeStyle = "white";
+
+        //build asteroid here
+        ctx.rect(this.x, this.y, this.size, this.size);
+
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    this.move = function () {
+        this.x += this.speed * Math.cos(this.direction);
+        this.y += this.speed * Math.sin(this.direction);
+    }
+
+    this.getX = function () {
+        return this.x;
+    }
+
+    this.getY = function () {
+        return this.y;
+    }
+
+    this.setX = function (newX) {
+        this.x = newX;
+    }
+
+    this.setY = function (newY) {
+        this.y = newY;
+    }
+
+
 }
 
 
-function localGame(StartingLocationPlayer,StartingLocationOpp) {
+function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.asteroids = [];
 
@@ -195,8 +238,15 @@ function localGame(StartingLocationPlayer,StartingLocationOpp) {
 
     }
 
-    this.setOpponenentCoordinates = function () {
-
+    this.getAsteroidsArr = function () {
+        return this.asteroids;
     }
 
+    this.addAsteroids = function (arrOfAsteroids) {
+        for (var i = 0; i < arrOfAsteroids.length; i++) {
+            var a = arrOfAsteroids[i];
+            //x, y, size, dir
+            this.asteroids.push(new Asteroid(a.loc[0], a.loc[1], a.size, a.dir));
+        }
+    }
 }

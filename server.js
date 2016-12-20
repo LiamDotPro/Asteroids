@@ -7,6 +7,7 @@ var io = require('socket.io')(http);
 var Client = require('./src/Client.js');
 var Game = require('./src/Game.js');
 var Spaceship = require('./src/Spaceship.js');
+var Asteroid = require('./src/Asteroid.js');
 var UUID = require('./src/UUID.js');
 
 //Gets all of the connected clients
@@ -38,6 +39,7 @@ io.on('connection', function (socket) {
         id: socket.id,
         canvasType: "menu"
     });
+
 
     console.log("Srv <- Client connected: " + socket.id);
 
@@ -281,15 +283,24 @@ io.on('connection', function (socket) {
         //set lobby status as playing
         selectedLobby.setLobbyStatus("Playing");
 
+        //create asteroids for game.
+        var asteroids = [];
+
+        for (var i = 0; i < 20; i++) {
+            asteroids.push(new Asteroid());
+        }
+
         //notify all clients in lobby game has started and to build game.
         io.to(selectedLobby.getPlayer1ID()).emit('gameStart', {
             you: [640, 200],
-            other: [640, 400]
+            other: [640, 400],
+            asteroids: asteroids
         });
 
         io.to(selectedLobby.getPlayer2ID()).emit('gameStart', {
             you: [640, 400],
-            other: [640, 200]
+            other: [640, 200],
+            asteroids: asteroids
         })
 
 
