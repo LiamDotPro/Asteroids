@@ -2,6 +2,7 @@
     //small form locations.
     this.x = x;
     this.y = y;
+    this.side = 40;
 
     //full location
     this.loc = [x, y];
@@ -37,6 +38,10 @@
 
     this.getY = function () {
         return this.y;
+    }
+
+    this.getSide = function () {
+        return this.side;
     }
 
     this.getThrusterSpeed = function () {
@@ -160,7 +165,7 @@
 
         var ctx = ctx;
 
-        var side = 40;
+        var side = this.side;
 
         var h = side * (Math.sqrt(3) / 2);
 
@@ -220,6 +225,10 @@ function Asteroid(x, y, size, dir, speed) {
 
     this.getY = function () {
         return this.y;
+    }
+
+    this.getSize = function () {
+        return this.size;
     }
 
     this.setX = function (newX) {

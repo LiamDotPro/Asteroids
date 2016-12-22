@@ -276,6 +276,16 @@
             }
         }
 
+        //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
+        for (var x = 0; x < asteroids.length; x++) {
+            if (playerShip.getX() < asteroids[x].getX() + asteroids[x].getSize() && 
+                playerShip.getX() + playerShip.getSide() > asteroids[x].getX() &&
+                playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
+                playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
+                console.log("collision detected");
+            }
+        }
+
     }
 
 }
