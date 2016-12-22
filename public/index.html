@@ -325,6 +325,9 @@
             var yourSpaceship = data.you;
             var thereSpaceship = data.other;
 
+            //Used to check if the key is being held down.
+            var keypressed = false;
+
             //create a new instance of localgame
             canvasobj.setLocalGame(new localGame(yourSpaceship, thereSpaceship));
             canvasobj.modifyCanvas(canvas, "game");
@@ -332,11 +335,28 @@
             //capture keys pressed
             document.addEventListener('keyup', function (event) {
                 keys[event.keyCode] = false;
+                if (event.keyCode == 32) {
+                    keypressed = false;
+                }
             });
 
 
             document.addEventListener('keydown', function (event) {
                 keys[event.keyCode] = true;
+                
+            });
+
+
+            document.addEventListener('keypress', function (event) {
+                if (event.keyCode == 32 && keypressed === false) {
+                    socket.emit('playerShot', {
+
+                    });
+                    canvasobj.getLocalGame().getPlayerSpaceship().shoot();
+                    keypressed = true;
+
+                }
+
             });
 
             canvasobj.getLocalGame().addAsteroids(data.asteroids);

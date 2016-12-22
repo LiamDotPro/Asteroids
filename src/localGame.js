@@ -96,7 +96,14 @@
     }
 
     this.shoot = function () {
-        this.projectiles.push(new Projectile(this.x, this.y, this.direction));
+        if (this.projectiles.length <= 100) {
+            this.projectiles.push(new Projectile(this.x, this.y, this.direction));
+            return true;
+        } else {
+            return false;
+        }
+
+
     }
 
     //damage methods
@@ -226,11 +233,19 @@ function Asteroid(x, y, size, dir, speed) {
 
 }
 
-function Projectile(x,y, dir) {
+function Projectile(x, y, dir) {
     this.x = x;
     this.y = y;
     this.direction = dir;
-    this.speed = 4;
+    this.speed = 6;
+
+    this.getX = function () {
+        return this.x;
+    }
+
+    this.getY = function () {
+        return this.y;
+    }
 
     this.move = function () {
         this.x += this.speed * Math.cos(this.direction);
@@ -238,8 +253,18 @@ function Projectile(x,y, dir) {
     }
 
     //renders the bullet to the screen
-    this.render = function () {
+    this.render = function (ctx) {
+        var ctx = ctx;
 
+        ctx.save();
+
+        ctx.beginPath();
+
+        ctx.fillRect(this.x, this.y, 5, 15);
+
+        ctx.closePath();
+
+        ctx.restore();
     }
 
 }

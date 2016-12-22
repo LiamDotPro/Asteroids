@@ -157,6 +157,11 @@
             this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
         }
 
+        for (var x = 0; x < this.localGame.getOpponenetSpaceship().getProjectiles().length; x++) {
+            this.localGame.getPlayerSpaceship().getProjectiles()[x].render(ctx);
+            this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
+        }
+
     }
 
     //This is used to capture events driven by the players
@@ -190,14 +195,6 @@
 
             socket.emit('opponenentMovedRight', {
                 lobbyID: this.player.getLobbyID()
-            });
-        }
-
-        if (keycodeArr[32]) {
-            playerShip.shoot();
-
-            socket.emit('playerShot', {
-                
             });
         }
 
@@ -264,6 +261,12 @@
             //finding if the x co-ordinates matchs top wall
             if (asteroids[i].getY() >= this.height) {
                 asteroids[i].setY(0.01);
+            }
+        }
+
+        for (var x = 0; x < playerShip.getProjectiles().length; x++){
+            if (playerShip.getProjectiles()[x].getX() <= 0 || playerShip.getProjectiles()[x].getX() >= this.width || playerShip.getProjectiles()[x].getY() <= 0 || playerShip.getProjectiles()[x].getY() >= this.height) {
+                playerShip.getProjectiles().splice(x, 1);
             }
         }
 
