@@ -18,7 +18,7 @@
     this.shield = 100;
 
     //The direction the spaceship is heading
-    this.direction = 0;
+    this.direction = 3 * Math.PI / 2;
 
     //methods
 
@@ -49,17 +49,21 @@
     }
 
     this.turnRight = function () {
-        this.direction += 0.11;
+        this.direction += 0.1;
 
     }
 
     this.turnLeft = function () {
-        this.direction += -0.11;
+        this.direction += -0.1;
     }
 
 
     this.getLoc = function () {
         return this.loc;
+    }
+
+    this.getProjectiles = function () {
+        return this.projectiles;
     }
 
     //set methods
@@ -89,6 +93,10 @@
         this.loc = [x, y];
         this.x = x;
         this.y = y;
+    }
+
+    this.shoot = function () {
+        this.projectiles.push(new Projectile(this.x, this.y, this.direction));
     }
 
     //damage methods
@@ -169,7 +177,6 @@
 
         ctx.restore();
 
-
     }
 
 
@@ -182,9 +189,11 @@ function Asteroid(x, y, size, dir, speed) {
     this.direction = dir;
     this.speed = 2;
 
+
     this.renderAsteroid = function (ctx) {
+        ctx.strokeStyle = "#ffffff";
+
         ctx.save();
-        ctx.strokeStyle = "white";
 
         //build asteroid here
         ctx.rect(this.x, this.y, this.size, this.size);
@@ -217,6 +226,24 @@ function Asteroid(x, y, size, dir, speed) {
 
 }
 
+function Projectile(x,y, dir) {
+    this.x = x;
+    this.y = y;
+    this.direction = dir;
+    this.speed = 4;
+
+    this.move = function () {
+        this.x += this.speed * Math.cos(this.direction);
+        this.y += this.speed * Math.sin(this.direction);
+    }
+
+    //renders the bullet to the screen
+    this.render = function () {
+
+    }
+
+}
+
 
 function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
@@ -224,6 +251,9 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.playerSpaceship = new Spaceship(StartingLocationPlayer[0], StartingLocationPlayer[1]);
     this.opponenetSpaceship = new Spaceship(StartingLocationOpp[0], StartingLocationOpp[1]);
+
+    this.playerScore = 0;
+    this.oppScore = 0;
 
 
     this.getPlayerSpaceship = function () {
@@ -249,4 +279,11 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
             this.asteroids.push(new Asteroid(a.loc[0], a.loc[1], a.size, a.dir));
         }
     }
+
+    this.renderScores = function (ctx, canvasObj) {
+        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Your Score:" + this.playerScore, 10, 40);
+        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Opponent Score:" + this.oppScore, 1050, 40);
+
+    }
+
 }

@@ -128,7 +128,7 @@
         ctx.font = font;
         ctx.fillStyle = color;
         ctx.fillText(text, x, y);
-        console.log("Text Has been drawn" + ctx, font, color, text, x, y);
+        //console.log("Text Has been drawn" + ctx, font, color, text, x, y);
     }
 
 
@@ -141,13 +141,20 @@
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+
         //render the spaceships onto the canvas using there co-ordinates
         this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
         this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
+        this.localGame.renderScores(ctx, this);
 
         for (var i = 0; i < this.localGame.getAsteroidsArr().length; i++) {
             this.localGame.getAsteroidsArr()[i].renderAsteroid(ctx);
             this.localGame.getAsteroidsArr()[i].move();
+        }
+
+        for (var x = 0; x < this.localGame.getPlayerSpaceship().getProjectiles().length; x++) {
+            this.localGame.getPlayerSpaceship().getProjectiles()[x].render(ctx);
+            this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
         }
 
     }
@@ -183,6 +190,14 @@
 
             socket.emit('opponenentMovedRight', {
                 lobbyID: this.player.getLobbyID()
+            });
+        }
+
+        if (keycodeArr[32]) {
+            playerShip.shoot();
+
+            socket.emit('playerShot', {
+                
             });
         }
 
