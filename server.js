@@ -388,6 +388,9 @@ io.on('connection', function (socket) {
         socket.broadcast.to(data.lobbyID).emit("moveOpponenetRight", {});
     });
 
+    socket.on('playerShot', function (data) {
+        socket.broadcast.to(data.lobbyID).emit("opponentShoot", {});
+    });
 
 
 });

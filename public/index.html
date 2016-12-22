@@ -350,7 +350,7 @@
             document.addEventListener('keypress', function (event) {
                 if (event.keyCode == 32 && keypressed === false) {
                     socket.emit('playerShot', {
-
+                        lobbyID: canvasobj.getPlayer().getLobbyID()
                     });
                     canvasobj.getLocalGame().getPlayerSpaceship().shoot();
                     keypressed = true;
@@ -385,6 +385,10 @@
 
         socket.on('moveOpponenetLeft', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().turnLeft();
+        });
+
+        socket.on('opponentShoot', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().shoot();
         });
 
     </script>

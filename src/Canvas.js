@@ -157,9 +157,9 @@
             this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
         }
 
-        for (var x = 0; x < this.localGame.getOpponenetSpaceship().getProjectiles().length; x++) {
-            this.localGame.getPlayerSpaceship().getProjectiles()[x].render(ctx);
-            this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
+        for (var y = 0; y < this.localGame.getOpponenetSpaceship().getProjectiles().length; y++) {
+            this.localGame.getOpponenetSpaceship().getProjectiles()[y].render(ctx);
+            this.localGame.getOpponenetSpaceship().getProjectiles()[y].move(ctx);
         }
 
     }
@@ -267,6 +267,12 @@
         for (var x = 0; x < playerShip.getProjectiles().length; x++){
             if (playerShip.getProjectiles()[x].getX() <= 0 || playerShip.getProjectiles()[x].getX() >= this.width || playerShip.getProjectiles()[x].getY() <= 0 || playerShip.getProjectiles()[x].getY() >= this.height) {
                 playerShip.getProjectiles().splice(x, 1);
+            }
+        }
+
+        for (var x = 0; x < oppShip.getProjectiles().length; x++) {
+            if (oppShip.getProjectiles()[x].getX() <= 0 || oppShip.getProjectiles()[x].getX() >= this.width || oppShip.getProjectiles()[x].getY() <= 0 || oppShip.getProjectiles()[x].getY() >= this.height) {
+                oppShip.getProjectiles().splice(x, 1);
             }
         }
 
