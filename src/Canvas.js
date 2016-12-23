@@ -264,7 +264,41 @@
             }
         }
 
-        for (var x = 0; x < playerShip.getProjectiles().length; x++){
+
+        //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
+        for (var x = 0; x < asteroids.length; x++) {
+            if (playerShip.getX() < asteroids[x].getX() + asteroids[x].getSize() &&
+                playerShip.getX() + playerShip.getSide() > asteroids[x].getX() &&
+                playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
+                playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
+
+            }
+        }
+
+        var bullets = playerShip.getProjectiles();
+
+        for (var x = 0; x < asteroids.length; x++) {
+            for (var i = 0; i < bullets.length ; i++) {
+                if (asteroids[x].getX() < bullets[i].getX() + bullets[i].getWidth() &&
+                    asteroids[x].getX() + asteroids[x].getSize() > bullets[i].getX() &&
+                    asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
+                    asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
+
+                    console.log("bullet hit asteroid!");
+
+                    asteroids.splice(x, 1);
+                    bullets.splice(i, 1);
+
+                    socket.emit('asteroidHitByPlayer', {
+                        lobbyID: this.player.getLobbyID(),
+                        asteroidID: x,
+                        bulletID: i
+                    });
+                }
+            }
+        }
+
+        for (var x = 0; x < playerShip.getProjectiles().length; x++) {
             if (playerShip.getProjectiles()[x].getX() <= 0 || playerShip.getProjectiles()[x].getX() >= this.width || playerShip.getProjectiles()[x].getY() <= 0 || playerShip.getProjectiles()[x].getY() >= this.height) {
                 playerShip.getProjectiles().splice(x, 1);
             }
@@ -273,16 +307,6 @@
         for (var x = 0; x < oppShip.getProjectiles().length; x++) {
             if (oppShip.getProjectiles()[x].getX() <= 0 || oppShip.getProjectiles()[x].getX() >= this.width || oppShip.getProjectiles()[x].getY() <= 0 || oppShip.getProjectiles()[x].getY() >= this.height) {
                 oppShip.getProjectiles().splice(x, 1);
-            }
-        }
-
-        //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
-        for (var x = 0; x < asteroids.length; x++) {
-            if (playerShip.getX() < asteroids[x].getX() + asteroids[x].getSize() && 
-                playerShip.getX() + playerShip.getSide() > asteroids[x].getX() &&
-                playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
-                playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
-                console.log("collision detected");
             }
         }
 

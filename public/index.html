@@ -285,7 +285,7 @@
             $("#lobby").empty();
         });
 
-        //polyfill algorityhm 
+        //polyfill algorityhm  - Credit Opera engineer Erik Möller - As found at https://www.paulirish.com/2011/requestanimationframe-for-smart-animating/
         (function () {
             var lastTime = 0;
             var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -389,6 +389,14 @@
 
         socket.on('opponentShoot', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().shoot();
+        });
+
+        socket.on('removeBulletAndAsteroid', function (data) {
+            var asteroidsArr = canvasobj.getLocalGame().getAsteroidsArr();
+            var oppShip = canvasobj.getLocalGame().getOpponenetSpaceship();
+
+            oppShip.getProjectiles().splice(data.bulletID, 1);
+            asteroidsArr.splice(data.asteroidID, 1);
         });
 
     </script>

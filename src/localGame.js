@@ -247,6 +247,8 @@ function Projectile(x, y, dir) {
     this.y = y;
     this.direction = dir;
     this.speed = 6;
+    this.width = 5;
+    this.height = 15;
 
     this.getX = function () {
         return this.x;
@@ -254,6 +256,14 @@ function Projectile(x, y, dir) {
 
     this.getY = function () {
         return this.y;
+    }
+
+    this.getWidth = function () {
+        return this.width;
+    }
+
+    this.getHeight = function () {
+        return this.height;
     }
 
     this.move = function () {
@@ -269,7 +279,7 @@ function Projectile(x, y, dir) {
 
         ctx.beginPath();
 
-        ctx.fillRect(this.x, this.y, 5, 15);
+        ctx.fillRect(this.x, this.y, this.width, this.height);
 
         ctx.closePath();
 
@@ -296,10 +306,6 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.getOpponenetSpaceship = function () {
         return this.opponenetSpaceship;
-    }
-
-    this.setPlayerCoordinates = function () {
-
     }
 
     this.getAsteroidsArr = function () {

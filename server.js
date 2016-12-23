@@ -392,5 +392,13 @@ io.on('connection', function (socket) {
         socket.broadcast.to(data.lobbyID).emit("opponentShoot", {});
     });
 
+    socket.on('asteroidHitByPlayer', function (data) {
+        console.log(data);
+        socket.broadcast.to(data.lobbyID).emit("removeBulletAndAsteroid", {
+            asteroidID: data.asteroidID,
+            bulletID: data.bulletID
+        });
+    });
+
 
 });
