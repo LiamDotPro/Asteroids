@@ -286,8 +286,8 @@ io.on('connection', function (socket) {
         //create asteroids for game.
         var asteroids = [];
 
-        for (var i = 0; i < 20; i++) {
-            asteroids.push(new Asteroid());
+        for (var i = 0; i < 6; i++) {
+            asteroids.push(new Asteroid(3, null));
         }
 
         //notify all clients in lobby game has started and to build game.
@@ -393,11 +393,34 @@ io.on('connection', function (socket) {
     });
 
     socket.on('asteroidHitByPlayer', function (data) {
-       
+
         socket.broadcast.to(data.lobbyID).emit("removeBulletAndAsteroid", {
             asteroidID: data.asteroidID,
             bulletID: data.bulletID
         });
+
+        console.log(data);
+
+        if (data.tier !== 1) {
+            var CurrentTier = data.tier - 1;
+            console.log("adding tier " + CurrentTier + " Asteroid");
+
+            var newAsteroids = [];
+            for (var i = 0; i < 3; i++) {
+                newAsteroids.push(new Asteroid(CurrentTier, data.cords));
+            }
+
+            io.to(data.lobbyID).emit('replenishAsteroids', {
+                asteroids: newAsteroids
+            });
+        }
+
+
+    });
+
+    //triggerec when all of the asteroids have been defeated and the level is done.
+    socket.on('asteroidsDeafeated', function (data) {
+
     });
 
 

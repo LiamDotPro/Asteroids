@@ -360,7 +360,7 @@
             });
 
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
-            console.log(canvasobj.getLocalGame().getAsteroidsArr());
+          //console.log(canvasobj.getLocalGame().getAsteroidsArr());
     
             main();
 
@@ -399,6 +399,10 @@
             asteroidsArr.splice(data.asteroidID, 1);
 
             canvasobj.getLocalGame().addOppScore();
+        });
+
+        socket.on('replenishAsteroids', function (data) {
+            canvasobj.getLocalGame().addAsteroids(data.asteroids);
         });
 
     </script>

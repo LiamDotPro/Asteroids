@@ -3,9 +3,9 @@
     //canvas properties
     this.player = player;
     this.socket = socket;
-    this.localGame;
-    this.canvas;
-    this.ctx;
+    this.localGame = null;
+    this.canvas = null;
+    this.ctx = null;
     this.width = 1280;
     this.height = 680;
 
@@ -114,6 +114,10 @@
                 break;
 
             case "score screen":
+                console.log("rendering the score screen");
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.fillStyle = "#000000";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
                 break;
         }
     }
@@ -144,9 +148,15 @@
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
         //render the spaceships onto the canvas using there co-ordinates
-        this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
+        if (this.localGame.getPlayerSpaceship().getHealth() > 0) {
+            this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
+        }
+
+        if (this.localGame.getOpponenetSpaceship().getHealth() > 0) {
+            this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
+        }
+
         this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
         this.localGame.renderScores(ctx, this);
 
@@ -174,6 +184,9 @@
         var oppShip = this.localGame.getOpponenetSpaceship();
         var asteroids = this.localGame.getAsteroidsArr();
 
+        if ((playerShip.getHealth <= 0 && oppShip <= 0) || this.localGame.getLevel() === 11) {
+
+        }
 
         if (keycodeArr[87]) {
             playerShip.forwardMove();
@@ -266,7 +279,7 @@
                 asteroids[i].setY(0.01);
             }
         }
-
+        console.log(asteroids);
 
         //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
         for (var x = 0; x < asteroids.length; x++) {
@@ -287,15 +300,21 @@
                     asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
                     asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
 
-                    this.localGame.addPlayerScore();
-                    asteroids.splice(x, 1);
-                    bullets.splice(i, 1);
+                    
 
                     socket.emit('asteroidHitByPlayer', {
                         lobbyID: this.player.getLobbyID(),
                         asteroidID: x,
-                        bulletID: i
+                        bulletID: i,
+                        cords: [asteroids[x].getX(), asteroids[x].getY()],
+                        tier: asteroids[x].getTier()
                     });
+
+                    this.localGame.addPlayerScore();
+                    asteroids.splice(x, 1);
+                    bullets.splice(i, 1);
+
+
                 }
             }
         }
@@ -313,11 +332,16 @@
         }
 
         //no asteroids are left.
-        if(asteroids.length == 0){
-        
+        if (asteroids.length == 0) {
+
             this.localGame.increaseLevel();
+            socket.emit('asteroidsDeafeated', {
+                lobbyID: this.player.getLobbyID()
+            });
 
         }
+
+      
 
     }
 

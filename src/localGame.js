@@ -15,8 +15,7 @@
     this.friction = 0.98;
 
     //spaceship health and shield
-    this.health = 100;
-    this.shield = 100;
+    this.health = 3;
 
     //The direction the spaceship is heading
     this.direction = 3 * Math.PI / 2;
@@ -28,9 +27,6 @@
         return this.health;
     }
 
-    this.getShield = function () {
-        return this.shield;
-    }
 
     this.getX = function () {
         return this.x;
@@ -113,10 +109,6 @@
 
     //damage methods
 
-    this.applyDamageToShield = function (dmg) {
-        this.shield = shield - dmg;
-    }
-
     this.applyDamageToHealth = function (dmg) {
         this.health = health - dmg;
     }
@@ -194,12 +186,13 @@
 
 }
 
-function Asteroid(x, y, size, dir, speed) {
+function Asteroid(x, y, size, dir, tier) {
     this.x = x;
     this.y = y;
     this.size = size;
     this.direction = dir;
     this.speed = 2;
+    this.tier = tier;
 
 
     this.renderAsteroid = function (ctx) {
@@ -239,6 +232,9 @@ function Asteroid(x, y, size, dir, speed) {
         this.y = newY;
     }
 
+    this.getTier = function () {
+        return this.tier;
+    }
 
 }
 
@@ -317,7 +313,8 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
         for (var i = 0; i < arrOfAsteroids.length; i++) {
             var a = arrOfAsteroids[i];
             //x, y, size, dir
-            this.asteroids.push(new Asteroid(a.loc[0], a.loc[1], a.size, a.dir));
+            this.asteroids.push(new Asteroid(a.loc[0], a.loc[1], a.size, a.dir, a.tier));
+            console.log(arrOfAsteroids);
         }
     }
 
