@@ -112,6 +112,9 @@
 
                 this.player.serverClientLocation("ingame");
                 break;
+
+            case "score screen":
+                break;
         }
     }
 
@@ -284,8 +287,7 @@
                     asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
                     asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
 
-                    console.log("bullet hit asteroid!");
-
+                    this.localGame.addPlayerScore();
                     asteroids.splice(x, 1);
                     bullets.splice(i, 1);
 
@@ -308,6 +310,13 @@
             if (oppShip.getProjectiles()[x].getX() <= 0 || oppShip.getProjectiles()[x].getX() >= this.width || oppShip.getProjectiles()[x].getY() <= 0 || oppShip.getProjectiles()[x].getY() >= this.height) {
                 oppShip.getProjectiles().splice(x, 1);
             }
+        }
+
+        //no asteroids are left.
+        if(asteroids.length == 0){
+        
+            this.localGame.increaseLevel();
+
         }
 
     }

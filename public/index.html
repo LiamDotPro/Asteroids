@@ -397,6 +397,8 @@
 
             oppShip.getProjectiles().splice(data.bulletID, 1);
             asteroidsArr.splice(data.asteroidID, 1);
+
+            canvasobj.getLocalGame().addOppScore();
         });
 
     </script>

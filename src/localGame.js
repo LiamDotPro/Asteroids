@@ -298,6 +298,7 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.playerScore = 0;
     this.oppScore = 0;
+    this.level = 0;
 
 
     this.getPlayerSpaceship = function () {
@@ -323,7 +324,22 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
     this.renderScores = function (ctx, canvasObj) {
         canvasObj.createCanvasText(ctx, "20px Arial", "white", "Your Score:" + this.playerScore, 10, 40);
         canvasObj.createCanvasText(ctx, "20px Arial", "white", "Opponent Score:" + this.oppScore, 1050, 40);
+    }
 
+    this.addPlayerScore = function () {
+        this.playerScore += 10;
+    }
+
+    this.addOppScore = function () {
+        this.oppScore += 10;
+    }
+
+    this.increaseLevel = function () {
+        this.level++;
+    }
+
+    this.getLevel = function () {
+        return this.level;
     }
 
 }
