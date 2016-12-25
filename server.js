@@ -420,7 +420,13 @@ io.on('connection', function (socket) {
 
     //triggerec when all of the asteroids have been defeated and the level is done.
     socket.on('asteroidsDeafeated', function (data) {
-
+        var lobby = lobbys.get(data.lobbyID);
+        if (lobby.getPlayer1ID === data.player) {
+            switch(data.level){
+            
+            }
+        
+        }
     });
 
 

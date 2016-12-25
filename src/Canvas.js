@@ -336,7 +336,8 @@
 
             this.localGame.increaseLevel();
             socket.emit('asteroidsDeafeated', {
-                lobbyID: this.player.getLobbyID()
+                lobbyID: this.player.getLobbyID(),
+                player: this.player.getPlayer.getId()
             });
 
         }
