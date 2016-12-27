@@ -42,7 +42,6 @@
 
     <script type="text/javascript" src="/src/Canvas.js"></script>
     <script type="text/javascript" src="/src/Player.js"></script>
-    <script type="text/javascript" src="/src/localSpaceship.js"></script>
     <script type="text/javascript" src="/src/localGame.js"></script>
     <script>
         var socket = io();
@@ -343,7 +342,7 @@
 
             document.addEventListener('keydown', function (event) {
                 keys[event.keyCode] = true;
-                
+
             });
 
 
@@ -360,8 +359,8 @@
             });
 
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
-          //console.log(canvasobj.getLocalGame().getAsteroidsArr());
-    
+            //console.log(canvasobj.getLocalGame().getAsteroidsArr());
+
             main();
 
 
@@ -403,6 +402,20 @@
 
         socket.on('replenishAsteroids', function (data) {
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
+            canvasobj.setSync(true);
+        });
+
+        socket.on('levelUpdate', function (data) {
+            canvasobj.getLocalGame().increaseLevel();
+        });
+
+        socket.on('opponentHit', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().decreaseHealth();
+            canvasobj.getLocalGame().getOpponenetSpaceship().setProtection(true);
+        });
+
+        socket.on('protectionOff', function (data) {
+            canvasobj.getLocalGame().getOpponenetSpaceship().setProtection(false);
         });
 
     </script>

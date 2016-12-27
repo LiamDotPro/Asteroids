@@ -8,6 +8,7 @@
     this.ctx = null;
     this.width = 1280;
     this.height = 680;
+    this.sync = true;
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
@@ -138,6 +139,11 @@
         //console.log("Text Has been drawn" + ctx, font, color, text, x, y);
     }
 
+    //flag for maintaining sigular occuring events within the game loop.
+    this.setSync = function (bool) {
+        this.sync = bool;
+    }
+
 
     //This is used to render our players and asteroids using the local game
     this.render = function () {
@@ -148,17 +154,21 @@
         ctx.fillStyle = "#000000";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+        if (this.localGame.getOpponenetSpaceship().getHealth() > 0) {
+            this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
+        }
+
         //render the spaceships onto the canvas using there co-ordinates
         if (this.localGame.getPlayerSpaceship().getHealth() > 0) {
             this.localGame.getPlayerSpaceship().renderSpaceShip(ctx);
         }
 
-        if (this.localGame.getOpponenetSpaceship().getHealth() > 0) {
-            this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
-        }
+        //rendering scores here
 
-        this.localGame.getOpponenetSpaceship().renderSpaceShip(ctx);
         this.localGame.renderScores(ctx, this);
+        this.localGame.renderLevel(ctx, this);
+        this.localGame.renderHealth(ctx, this);
+
 
         for (var i = 0; i < this.localGame.getAsteroidsArr().length; i++) {
             this.localGame.getAsteroidsArr()[i].renderAsteroid(ctx);
@@ -279,7 +289,6 @@
                 asteroids[i].setY(0.01);
             }
         }
-        console.log(asteroids);
 
         //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
         for (var x = 0; x < asteroids.length; x++) {
@@ -288,6 +297,21 @@
                 playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
                 playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
 
+                if (playerShip.getProtection() !== true) {
+                    //notify the server that a player has been hit.
+                    socket.emit('playerHitByAsteroid', {
+                        lobbyID: this.player.getLobbyID(),
+                        playerID: this.player.getId()
+                    });
+
+                    playerShip.decreaseHealth();
+
+                    this.localGame.getPlayerSpaceship().setProtection(true);
+
+                    //changes the vunerablity back on.
+                    changeProtection(this.localGame.getPlayerSpaceship());
+                }
+                console.log(playerShip);
             }
         }
 
@@ -299,8 +323,6 @@
                     asteroids[x].getX() + asteroids[x].getSize() > bullets[i].getX() &&
                     asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
                     asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
-
-                    
 
                     socket.emit('asteroidHitByPlayer', {
                         lobbyID: this.player.getLobbyID(),
@@ -332,18 +354,25 @@
         }
 
         //no asteroids are left.
-        if (asteroids.length == 0) {
+        if (asteroids.length == 0 && this.localGame.getLevelScore() && this.sync) {
 
-            this.localGame.increaseLevel();
             socket.emit('asteroidsDeafeated', {
                 lobbyID: this.player.getLobbyID(),
-                player: this.player.getPlayer.getId()
+                player: this.player.getId(),
+                level: this.localGame.getLevel()
             });
 
+            console.log("level updated.");
+            //set sync to false so no further executions are possible till replenishment.
+            this.sync = false;
         }
 
-      
 
+
+    }
+
+    function changeProtection(playerSpacehsip) { 
+        setTimeout(function() {playerSpacehsip.setProtection(false);},4000);
     }
 
 }

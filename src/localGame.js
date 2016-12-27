@@ -14,8 +14,11 @@
     this.thrusterSpeed = 4;
     this.friction = 0.98;
 
-    //spaceship health and shield
+    //spaceship health
     this.health = 3;
+
+    //respawnProtection
+    this.protection = false;
 
     //The direction the spaceship is heading
     this.direction = 3 * Math.PI / 2;
@@ -27,6 +30,9 @@
         return this.health;
     }
 
+    this.getProtection = function () {
+        return this.protection;
+    }
 
     this.getX = function () {
         return this.x;
@@ -67,9 +73,14 @@
         return this.projectiles;
     }
 
+
     //set methods
     this.setHealth = function (newHp) {
         this.health = hp;
+    }
+
+    this.decreaseHealth = function () {
+        this.health -= 1;
     }
 
     this.setShield = function (newShield) {
@@ -103,14 +114,10 @@
         } else {
             return false;
         }
-
-
     }
 
-    //damage methods
-
-    this.applyDamageToHealth = function (dmg) {
-        this.health = health - dmg;
+    this.setProtection = function (bool) {
+        this.protection = bool;
     }
 
     //update methods
@@ -155,8 +162,6 @@
 
     this.renderSpaceShip = function (ctx) {
 
-        var ctx = ctx;
-
         var side = this.side;
 
         var h = side * (Math.sqrt(3) / 2);
@@ -173,7 +178,11 @@
         ctx.lineTo(side / 2, h / 2);
         ctx.lineTo(0, -h / 2);
 
-        ctx.strokeStyle = "white";
+        if (this.protection === true) {
+            ctx.strokeStyle = "blue";
+        } else {
+            ctx.strokeStyle = "white";
+        }
 
         ctx.closePath();
 
@@ -196,15 +205,11 @@ function Asteroid(x, y, size, dir, tier) {
 
 
     this.renderAsteroid = function (ctx) {
-        ctx.strokeStyle = "#ffffff";
-
-        ctx.save();
+        ctx.strokeStyle = "white";
 
         //build asteroid here
-        ctx.rect(this.x, this.y, this.size, this.size);
+        ctx.strokeRect(this.x, this.y, this.size, this.size);
 
-        ctx.stroke();
-        ctx.restore();
     }
 
     this.move = function () {
@@ -269,17 +274,9 @@ function Projectile(x, y, dir) {
 
     //renders the bullet to the screen
     this.render = function (ctx) {
-        var ctx = ctx;
-
-        ctx.save();
-
-        ctx.beginPath();
 
         ctx.fillRect(this.x, this.y, this.width, this.height);
 
-        ctx.closePath();
-
-        ctx.restore();
     }
 
 }
@@ -288,6 +285,7 @@ function Projectile(x, y, dir) {
 function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.asteroids = [];
+    this.levelScore = generateLevelScores();
 
     this.playerSpaceship = new Spaceship(StartingLocationPlayer[0], StartingLocationPlayer[1]);
     this.opponenetSpaceship = new Spaceship(StartingLocationOpp[0], StartingLocationOpp[1]);
@@ -323,6 +321,15 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
         canvasObj.createCanvasText(ctx, "20px Arial", "white", "Opponent Score:" + this.oppScore, 1050, 40);
     }
 
+    this.renderLevel = function (ctx, canvasObj) {
+        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Level " + this.level, 500, 40);
+    }
+
+    this.renderHealth = function (ctx, canvasObj) {
+        canvasObj.createCanvasText(ctx, "20px Arial", "white", "life: " + this.playerSpaceship.getHealth(), 10, 80);
+        canvasObj.createCanvasText(ctx, "20px Arial", "white", "life: " + this.opponenetSpaceship.getHealth(), 1050, 80);
+    }
+
     this.addPlayerScore = function () {
         this.playerScore += 10;
     }
@@ -337,6 +344,26 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
 
     this.getLevel = function () {
         return this.level;
+    }
+
+    this.getLevelScore = function () {
+        var score = this.levelScore[this.level];
+        if (score === (this.playerScore + this.oppScore)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function generateLevelScores() {
+        var tempArr = [];
+        var counter = 2;
+        for (var x = 0; x < 3; x++) {
+            tempArr.push(counter * 130);
+            counter = counter * 2;
+        }
+        console.log(tempArr);
+        return tempArr;
     }
 
 }

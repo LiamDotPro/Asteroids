@@ -9,8 +9,6 @@
     this.player1ID = playerID;
     this.player2ID = "";
 
-    //Asteroids
-
     //spaceships
     this.player1Spaceship;
     this.player2Spaceship;

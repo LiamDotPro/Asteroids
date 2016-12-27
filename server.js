@@ -286,7 +286,7 @@ io.on('connection', function (socket) {
         //create asteroids for game.
         var asteroids = [];
 
-        for (var i = 0; i < 6; i++) {
+        for (var i = 0; i < 2; i++) {
             asteroids.push(new Asteroid(3, null));
         }
 
@@ -331,7 +331,7 @@ io.on('connection', function (socket) {
                     //set the second players lobby number as 0 as lobby is closed.
                     var secondPlayer = allConnectedClients.get(CurrentlyConnectedlobby.getPlayer2ID());
                     secondPlayer.setLobbyNum(0);
-
+                    s
 
                 }
 
@@ -399,11 +399,8 @@ io.on('connection', function (socket) {
             bulletID: data.bulletID
         });
 
-        console.log(data);
-
         if (data.tier !== 1) {
             var CurrentTier = data.tier - 1;
-            console.log("adding tier " + CurrentTier + " Asteroid");
 
             var newAsteroids = [];
             for (var i = 0; i < 3; i++) {
@@ -418,16 +415,46 @@ io.on('connection', function (socket) {
 
     });
 
-    //triggerec when all of the asteroids have been defeated and the level is done.
+    //triggered when all of the asteroids have been defeated and the level is done.
     socket.on('asteroidsDeafeated', function (data) {
         var lobby = lobbys.get(data.lobbyID);
-        if (lobby.getPlayer1ID === data.player) {
-            switch(data.level){
-            
+        if (lobby.getPlayer1ID() === data.player) {
+            console.log(data.level);
+            var asteroids = [];
+            switch (data.level) {
+                case 0:
+                    for (var x = 0; x < 4; x++) {
+                        asteroids.push(new Asteroid(3, null));
+                    }
+                    break;
+                case 1:
+                    for (var x = 0; x < 8; x++) {
+                        asteroids.push(new Asteroid(3, null));
+                    }
+                    break;
+
             }
-        
+
+            console.log(asteroids);
+
+            var newlvl = data.level++;
+
+            io.to(data.lobbyID).emit('replenishAsteroids', {
+                asteroids: asteroids
+            });
+
+            io.to(data.lobbyID).emit('levelUpdate', {
+                level: newlvl
+            });
+
         }
     });
 
-
+    socket.on('playerHitByAsteroid', function (data) {
+        socket.broadcast.to(data.lobbyID).emit("opponentHit", {});
+        function sendVunerable(){
+            socket.broadcast.to(data.lobbyID).emit("protectionOff", {})
+        }
+        setTimeout(sendVunerable, 4000);
+    });
 });
