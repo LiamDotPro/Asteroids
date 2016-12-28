@@ -332,31 +332,9 @@
             canvasobj.modifyCanvas(canvas, "game");
 
             //capture keys pressed
-            document.addEventListener('keyup', function (event) {
-                keys[event.keyCode] = false;
-                if (event.keyCode == 32) {
-                    keypressed = false;
-                }
-            });
-
-
-            document.addEventListener('keydown', function (event) {
-                keys[event.keyCode] = true;
-
-            });
-
-
-            document.addEventListener('keypress', function (event) {
-                if (event.keyCode == 32 && keypressed === false) {
-                    socket.emit('playerShot', {
-                        lobbyID: canvasobj.getPlayer().getLobbyID()
-                    });
-                    canvasobj.getLocalGame().getPlayerSpaceship().shoot();
-                    keypressed = true;
-
-                }
-
-            });
+            document.addEventListener('keyup', keyUp);
+            document.addEventListener('keydown', keyDown);
+            document.addEventListener('keypress', keyPress);
 
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
             //console.log(canvasobj.getLocalGame().getAsteroidsArr());
@@ -417,6 +395,34 @@
         socket.on('protectionOff', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().setProtection(false);
         });
+
+        socket.on('resetToLobby', function (data) {
+
+        });
+
+        function keyUp(event) {
+            keys[event.keyCode] = false;
+            if (event.keyCode == 32) {
+                keypressed = false;
+            }
+        }
+
+        function keyDown(event) {
+            keys[event.keyCode] = true;
+
+        }
+
+        function keyPress(event) {
+            if (event.keyCode == 32 && keypressed === false) {
+                socket.emit('playerShot', {
+                    lobbyID: canvasobj.getPlayer().getLobbyID()
+                });
+                canvasobj.getLocalGame().getPlayerSpaceship().shoot();
+                keypressed = true;
+
+            }
+
+        }
 
     </script>
 

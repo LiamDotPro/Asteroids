@@ -331,7 +331,7 @@ io.on('connection', function (socket) {
                     //set the second players lobby number as 0 as lobby is closed.
                     var secondPlayer = allConnectedClients.get(CurrentlyConnectedlobby.getPlayer2ID());
                     secondPlayer.setLobbyNum(0);
-                    s
+                    
 
                 }
 
@@ -452,9 +452,20 @@ io.on('connection', function (socket) {
 
     socket.on('playerHitByAsteroid', function (data) {
         socket.broadcast.to(data.lobbyID).emit("opponentHit", {});
-        function sendVunerable(){
+        function sendVunerable() {
             socket.broadcast.to(data.lobbyID).emit("protectionOff", {})
         }
-        setTimeout(sendVunerable, 4000);
+        setTimeout(sendVunerable, 2000);
+    });
+
+    socket.on('playerHasLeftScoreScreen', function (data) {
+        clientInstance.setLobbyNum(0);
+        socket.emit('resetToLobby', {});
+    });
+
+    socket.on('gameFinished', function (data) {
+        var selLobby = lobbys.get(data.lobbyID);
+
+
     });
 });

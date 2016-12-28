@@ -303,6 +303,14 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
         return this.opponenetSpaceship;
     }
 
+    this.getPlayerScore = function () {
+        return this.playerScore;
+    }
+
+    this.getOppScore = function () {
+        return this.oppScore;
+    }
+
     this.getAsteroidsArr = function () {
         return this.asteroids;
     }

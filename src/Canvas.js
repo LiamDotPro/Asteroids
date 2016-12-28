@@ -13,21 +13,21 @@
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
         this.localGame = localGame;
-    }
+    };
 
     //gets the local game
     this.getLocalGame = function () {
         return this.localGame;
-    }
+    };
 
     //gets the associtated player instance
     this.getPlayer = function () {
         return this.player;
-    }
+    };
 
     this.getBackgroundSourceColour = function () {
         return this.backgroundSourceColour;
-    }
+    };
 
     this.createCanvas = function (stage) {
 
@@ -40,7 +40,7 @@
                 return this.buildCanvas(this.width, this.height, 666, 'rgba(158, 167, 184, 0.2)');
                 break;
             default:
-                console.log("you have entered an incorrect stage.")
+                console.log("you have entered an incorrect stage.");
                 break;
 
         }
@@ -62,7 +62,7 @@
     }
 
     //Modifys each canvas so it has the correct setup for where the user is
-    this.modifyCanvas = function (canvas, stage, props) {
+    this.modifyCanvas = function (canvas, stage) {
 
         if (!isNaN(stage) || stage == "") {
             throw "Passed incorrect type or empty string";
@@ -119,6 +119,22 @@
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "#000000";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
+                if (this.localGame.getPlayerScore() > this.localGame.getOppScore()) {
+                    this.createCanvasText(ctx, "40px Arial", "white", "You Won!", 500, 300);
+                    this.createCanvasText(ctx, "40px Arial", "white", "your Score: " + this.localGame.getPlayerScore(), 500, 400);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Opponent Score: " + this.localGame.getOppScore(), 500, 500);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Press 'k' to go back to the lobby", 500, 600);
+                } else if (this.localGame.getPlayerScore() < this.localGame.getOppScore()) {
+                    this.createCanvasText(ctx, "40px Arial", "white", "You Lost!", 500, 300);
+                    this.createCanvasText(ctx, "40px Arial", "white", "your Score: " + this.localGame.getPlayerScore(), 500, 400);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Opponent Score: " + this.localGame.getOppScore(), 500, 500);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Press 'k' to go back to the lobby", 500, 600);
+                } else {
+                    this.createCanvasText(ctx, "40px Arial", "white", "You Drawed!", 500, 300);
+                    this.createCanvasText(ctx, "40px Arial", "white", "your Score: " + this.localGame.getPlayerScore(), 500, 400);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Opponent Score: " + this.localGame.getOppScore(), 500, 500);
+                    this.createCanvasText(ctx, "40px Arial", "white", "Press 'k' to go back to the lobby", 500, 600);
+                }
                 break;
         }
     }
@@ -194,7 +210,20 @@
         var oppShip = this.localGame.getOpponenetSpaceship();
         var asteroids = this.localGame.getAsteroidsArr();
 
-        if ((playerShip.getHealth <= 0 && oppShip <= 0) || this.localGame.getLevel() === 11) {
+        if ((playerShip.getHealth() <= 0 && oppShip.getHealth() <= 0) || this.localGame.getLevel() === 4) {
+            window.cancelAnimationFrame(main);
+            this.modifyCanvas(this.canvas, "score screen");
+
+            //remove event handlers and re-assign.
+            document.removeEventListener('keyup', keyUp);
+            document.removeEventListener('keydown', keyDown);
+            document.removeEventListener('keypress', keyPress);
+
+            socket.emit('gameFinished', {
+                lobbyID: this.player.getLobbyID()
+            });
+
+            document.addEventListener('spaceBar', kClick);
 
         }
 
@@ -367,12 +396,18 @@
             this.sync = false;
         }
 
-
-
     }
 
-    function changeProtection(playerSpacehsip) { 
-        setTimeout(function() {playerSpacehsip.setProtection(false);},4000);
+    function changeProtection(playerSpacehsip) {
+        setTimeout(function () { playerSpacehsip.setProtection(false); }, 2000);
+    }
+
+    function kClick (event) {
+        if(event.keyCode == 75) {
+            socket.emit('playerHasLeftScoreScreen', {
+
+            });
+        }
     }
 
 }
