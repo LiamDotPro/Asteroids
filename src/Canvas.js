@@ -9,6 +9,15 @@
     this.width = 1280;
     this.height = 680;
     this.sync = true;
+    this.status = false;
+
+    this.setStatus = function (newStatus) {
+        this.status = newStatus;
+    }
+
+    this.getStatus = function () {
+        return this.status;
+    }
 
     //sets a local game to the canvas.
     this.setLocalGame = function (localGame) {
@@ -211,7 +220,9 @@
         var asteroids = this.localGame.getAsteroidsArr();
 
         if ((playerShip.getHealth() <= 0 && oppShip.getHealth() <= 0) || this.localGame.getLevel() === 4) {
-            window.cancelAnimationFrame(main);
+           
+            cancelAnimationFrame(main);
+
             this.modifyCanvas(this.canvas, "score screen");
 
             //remove event handlers and re-assign.
@@ -340,7 +351,7 @@
                     //changes the vunerablity back on.
                     changeProtection(this.localGame.getPlayerSpaceship());
                 }
-                console.log(playerShip);
+               
             }
         }
 

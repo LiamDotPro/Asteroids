@@ -22,6 +22,11 @@
         return this.lobbyID;
     }
 
+    //sets the lobbys ID
+    this.setLobbyID = function (newID) {
+        this.lobbyID = newID;
+    }
+
     //sets the location of the user
     this.setLocation = function (newLocation) {
         this.location = newLocation;
@@ -65,10 +70,5 @@
         this.lobbyID = lobbyNum;
         this.lobbyStatus = true;
         console.log("Joined lobby: " + lobbyNum);
-    }
-
-    //tells the srv that the player has left the lobby
-    this.playerLeaveLobby = function () {
-        this.playerSocket.emit('leaveLobby', {});
     }
 }

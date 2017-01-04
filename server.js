@@ -309,6 +309,7 @@ io.on('connection', function (socket) {
     //triggered when a player in a lobby try to disconnect
     socket.on('playerAttemptingToDisconnect', function (data) {
         console.log("Player attempting to leave via button");
+        console.log(CurrentlyConnectedlobby);
         var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
 
         //Check to see if the disconnecting user was in a lobby.
@@ -331,7 +332,7 @@ io.on('connection', function (socket) {
                     //set the second players lobby number as 0 as lobby is closed.
                     var secondPlayer = allConnectedClients.get(CurrentlyConnectedlobby.getPlayer2ID());
                     secondPlayer.setLobbyNum(0);
-                    
+
 
                 }
 
@@ -464,8 +465,29 @@ io.on('connection', function (socket) {
     });
 
     socket.on('gameFinished', function (data) {
+
+
+        //Making a logical return if the lobby doesn't exsist due to two calls
+        if (!lobbys.has(data.lobbyID)) {
+            return;
+        }
+
+        //If you want to save data do so at this point
+
+        //halts the game loop from outside of the loop itself.
+        io.to(data.lobbyID).emit('haltGameLoop', {});
+
         var selLobby = lobbys.get(data.lobbyID);
 
+        var player1 = allConnectedClients.get(selLobby.getPlayer1ID());
+        var player2 = allConnectedClients.get(selLobby.getPlayer2ID());
+
+        player1.setLobbyNum(0);
+        player2.setLobbyNum(0);
+
+        lobbys.delete(data.lobbyID);
+
+        console.log("Server reached here");
 
     });
 });

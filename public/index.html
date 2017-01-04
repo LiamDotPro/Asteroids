@@ -52,6 +52,7 @@
         var controlsTag = document.getElementById("controls");
         var selectedID = "";
         var keys = [];
+        var loopRef = null;
         //setup of how the canvas should look at the beginning and setup server -> client handshake and information
         socket.on('onconnected', function (data) {
             var playerobj = new player(data.id, socket);
@@ -88,6 +89,50 @@
                 });
 
             });
+
+            //binds new event buttons as delegates - these lobby controls every user should start with
+            document.getElementById("lobbyControls").addEventListener("click", function (e) {
+
+                switch (e.target.id) {
+                    case "startButtonBtn":
+                        console.log("Player attemping to start game");
+
+                        //tell the sever the player is trying to start the game.
+                        socket.emit('playerAtemptingToStartGame', {
+                            lobbyID: canvasobj.getPlayer().getLobbyID(),
+                            playerID: canvasobj.getPlayer().getId()
+                        })
+
+                        break;
+                    case "readyButtonBtn":
+                        console.log("Player attempting to ready up");
+
+                        socket.emit('playerAttemptingToReady', {
+                            lobbyID: canvasobj.getPlayer().getLobbyID(),
+                            playerID: canvasobj.getPlayer().getId()
+                        });
+
+                        console.log($("#" + canvasobj.getPlayer().getId()).css('color'));
+
+                        if ($("#" + canvasobj.getPlayer().getId()).css('color') == "rgb(255, 0, 0)") {
+                            $("#" + canvasobj.getPlayer().getId()).css('color', 'green');
+                        } else {
+                            $("#" + canvasobj.getPlayer().getId()).css('color', 'red');
+                        }
+                        break;
+                    case "leaveButtonBtn":
+                        console.log("player attemping to leave lobby");
+                        canvasobj.getPlayer().setLobbyID(0);
+                        //notify the sever that the client is trying to disconnect
+                        socket.emit('playerAttemptingToDisconnect', {
+
+                        });
+
+                        break;
+                }
+
+            });
+
         });
 
         //Notifys client location has been updated
@@ -174,51 +219,13 @@
 
             //remove start game button from display if not host
             if (data.type === "player") {
+                console.log("found player");
                 $("#startButtonBtn").css("display", "none");
+            } else {
+                $("#startButtonBtn").css("display", "");
+                console.log("host found");
             }
 
-            //binds new event buttons as delegates
-            document.getElementById("lobbyControls").addEventListener("click", function (e) {
-
-                switch (e.target.id) {
-                    case "startButtonBtn":
-                        console.log("Player attemping to start game");
-
-                        //tell the sever the player is trying to start the game.
-                        socket.emit('playerAtemptingToStartGame', {
-                            lobbyID: canvasobj.getPlayer().getLobbyID(),
-                            playerID: canvasobj.getPlayer().getId()
-                        })
-
-                        break;
-                    case "readyButtonBtn":
-                        console.log("Player attempting to ready up");
-
-                        socket.emit('playerAttemptingToReady', {
-                            lobbyID: canvasobj.getPlayer().getLobbyID(),
-                            playerID: canvasobj.getPlayer().getId()
-                        });
-
-                        console.log($("#" + canvasobj.getPlayer().getId()).css('color'));
-
-                        if ($("#" + canvasobj.getPlayer().getId()).css('color') == "rgb(255, 0, 0)") {
-                            $("#" + canvasobj.getPlayer().getId()).css('color', 'green');
-                        } else {
-                            $("#" + canvasobj.getPlayer().getId()).css('color', 'red');
-                        }
-                        break;
-                    case "leaveButtonBtn":
-                        console.log("player attemping to leave lobby");
-
-                        //notify the sever that the client is trying to disconnect
-                        socket.emit('playerAttemptingToDisconnect', {
-
-                        });
-
-                        break;
-                }
-
-            });
 
             $(".userLobby").css("display", "");
             $("#lobbyControls").css("display", "");
@@ -229,6 +236,7 @@
 
             console.log("I have successfully joined a lobby!");
         });
+
 
         //updates the html dom room when someone joins or leaves a room.
         socket.on('updateLobbyPlayers', function (data) {
@@ -339,17 +347,18 @@
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
             //console.log(canvasobj.getLocalGame().getAsteroidsArr());
 
+            canvasobj.setStatus(true);
+
             main();
 
 
         });
 
-
+        //The game's main loop.
         function main() {
-            window.requestAnimationFrame(main);
             canvasobj.render();
             canvasobj.update(keys);
-
+            loopRef = requestAnimationFrame(main);
         }
 
         socket.on('moveOpponenetForward', function (data) {
@@ -398,6 +407,11 @@
 
         socket.on('resetToLobby', function (data) {
 
+        });
+
+        socket.on('haltGameLoop', function (data) {
+            console.log("Trying to stop game loop");
+            cancelAnimationFrame(loopRef);
         });
 
         function keyUp(event) {
