@@ -12,8 +12,15 @@
     "url": "https://github.com/LiamDotPro/Asteroids.git"
   },
   "scripts": {
+    "lint": "xo",
     "test": "mocha",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha"
+  },
+  "xo": {
+    "envs": [
+      "node",
+      "browser"
+    ]
   },
   "dependencies": {
     "express": "^4.14.0",
@@ -22,6 +29,7 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "istanbul": "^0.4.5",
-    "mocha": "^3.0.0-2"
+    "mocha": "^3.0.0-2",
+    "xo": "^0.17.1"
   }
 }
