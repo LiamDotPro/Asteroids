@@ -1,4 +1,5 @@
-﻿var Client = function (id, socket) {
+﻿// This class holds all of the information that the server needs to know about the connected client
+var Client = function (id, socket) {
     this.id = id;
     this.lobbyStatus = false;
     this.lobbyNum = 0;

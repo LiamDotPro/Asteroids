@@ -1,4 +1,5 @@
-﻿var UUID = function () {
+﻿//This class produces a unique indetifer.
+var UUID = function () {
 
     this.uniqueID = 0;
 
@@ -12,10 +13,12 @@
         return uuid;
     }
 
+    //gets the unique id
     this.getUUID = function () {
         return this.uniqueID;
     }
 
+    // generates the unique id using create function.
     this.generateUUID = function () {
         this.uniqueID = this.createUUID();
         console.log(this.uniqueID + " has been generated");

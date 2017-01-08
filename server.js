@@ -309,7 +309,6 @@ io.on('connection', function (socket) {
     //triggered when a player in a lobby try to disconnect
     socket.on('playerAttemptingToDisconnect', function (data) {
         console.log("Player attempting to leave via button");
-        console.log(CurrentlyConnectedlobby);
         var CurrentlyConnectedlobby = lobbys.get(clientInstance.getLobbyNum());
 
         //Check to see if the disconnecting user was in a lobby.
@@ -460,7 +459,6 @@ io.on('connection', function (socket) {
     });
 
     socket.on('playerHasLeftScoreScreen', function (data) {
-        clientInstance.setLobbyNum(0);
         socket.emit('resetToLobby', {});
     });
 
@@ -486,6 +484,11 @@ io.on('connection', function (socket) {
         player2.setLobbyNum(0);
 
         lobbys.delete(data.lobbyID);
+
+        //notify clients that lobby has been removed - host.
+        io.emit('removeLobby', {
+            lobbyID: data.lobbyID
+        });
 
         console.log("Server reached here");
 

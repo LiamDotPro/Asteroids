@@ -6,8 +6,6 @@
 
     <link rel="stylesheet" type="text/css" href="/css/style.css">
     <script src="/socket.io/socket.io.js"></script>
-
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
 </head>
@@ -172,6 +170,7 @@
 
         });
 
+        //gets a list of lobbys using children of the lobby div
         function getListOfAssigneLobbies() {
             var assignedArrayTemp = [];
 
@@ -333,7 +332,7 @@
             var thereSpaceship = data.other;
 
             //Used to check if the key is being held down.
-            var keypressed = false;
+            const keypressed = false;
 
             //create a new instance of localgame
             canvasobj.setLocalGame(new localGame(yourSpaceship, thereSpaceship));
@@ -361,22 +360,27 @@
             loopRef = requestAnimationFrame(main);
         }
 
+        //moves the opponenet forward
         socket.on('moveOpponenetForward', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().forwardMove();
         });
 
+        //moves the opponenet right
         socket.on('moveOpponenetRight', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().turnRight();
         });
 
+        //moves the opponenet left
         socket.on('moveOpponenetLeft', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().turnLeft();
         });
 
+        //makes the opponenet shoot
         socket.on('opponentShoot', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().shoot();
         });
 
+        //removes the bullet and asteroid when opponenet hits it
         socket.on('removeBulletAndAsteroid', function (data) {
             var asteroidsArr = canvasobj.getLocalGame().getAsteroidsArr();
             var oppShip = canvasobj.getLocalGame().getOpponenetSpaceship();
@@ -387,25 +391,36 @@
             canvasobj.getLocalGame().addOppScore();
         });
 
+        //replenish asteroids, takes an array and pushes them out
         socket.on('replenishAsteroids', function (data) {
             canvasobj.getLocalGame().addAsteroids(data.asteroids);
             canvasobj.setSync(true);
         });
 
+        //updates the level
         socket.on('levelUpdate', function (data) {
             canvasobj.getLocalGame().increaseLevel();
         });
 
+        //occures when the opponenet is hit.
         socket.on('opponentHit', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().decreaseHealth();
             canvasobj.getLocalGame().getOpponenetSpaceship().setProtection(true);
         });
 
+        //Turns the protection off on the opponent spaceship.
         socket.on('protectionOff', function (data) {
             canvasobj.getLocalGame().getOpponenetSpaceship().setProtection(false);
         });
 
+        //resets the user to the lobby
         socket.on('resetToLobby', function (data) {
+            canvasobj.modifyCanvas(canvas, "lobby menu");
+
+            $("#lobbies").css("display", "");
+            $("#controls").css("display", "");
+
+            document.removeEventListener('keypress', Kclick);
 
         });
 
@@ -414,6 +429,9 @@
             cancelAnimationFrame(loopRef);
         });
 
+        //helper methods and event functions
+
+        //key up event for use with event listener
         function keyUp(event) {
             keys[event.keyCode] = false;
             if (event.keyCode == 32) {
@@ -421,13 +439,15 @@
             }
         }
 
+        //key down event that handles when a player has let go of a key
         function keyDown(event) {
             keys[event.keyCode] = true;
 
         }
 
+        //handles shooting the spaceship
         function keyPress(event) {
-            if (event.keyCode == 32 && keypressed === false) {
+            if (event.keyCode == 32 && keypressed == false && canvasobj.getLocalGame().getPlayerSpaceship().getHealth() > 0) {
                 socket.emit('playerShot', {
                     lobbyID: canvasobj.getPlayer().getLobbyID()
                 });

@@ -1,4 +1,5 @@
-﻿var Asteroid = function asteroid(tier, loc) {
+﻿//Server side representation of a asteroid
+var Asteroid = function asteroid(tier, loc) {
 
     this.loc = generateCords();
     this.size = sizeByTier();
@@ -6,7 +7,7 @@
     this.speed = 
     this.tier = tier;
 
-
+    //when passed a tier it will generate a random size asteroid.
     function sizeByTier() {
         switch (tier) {
             case 3:
@@ -21,6 +22,7 @@
         }
     }
 
+    //When presented a tier it will generate a certain speed for the asteroid
     function generateSpeed() {
         switch (tier) {
             case 3:
@@ -35,6 +37,7 @@
         }
     }
 
+    //This will randomly generate a cordinate to spawn the asteroid but won't accept it unless the number generated are outside of the starting zone
     function generateCords() {
 
         if (loc !== null && loc.constructor === Array) {

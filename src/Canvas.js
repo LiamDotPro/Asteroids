@@ -38,6 +38,7 @@
         return this.backgroundSourceColour;
     };
 
+    //creates the canvas - Built to use a case for further development of different canvases
     this.createCanvas = function (stage) {
 
         if (!isNaN(stage) || stage == "") {
@@ -194,22 +195,27 @@
         this.localGame.renderLevel(ctx, this);
         this.localGame.renderHealth(ctx, this);
 
-
+        //renders and moves all asteroids
         for (var i = 0; i < this.localGame.getAsteroidsArr().length; i++) {
             this.localGame.getAsteroidsArr()[i].renderAsteroid(ctx);
             this.localGame.getAsteroidsArr()[i].move();
         }
 
-        for (var x = 0; x < this.localGame.getPlayerSpaceship().getProjectiles().length; x++) {
-            this.localGame.getPlayerSpaceship().getProjectiles()[x].render(ctx);
-            this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
+        //Renders the spaceships projectiles if the player is alive
+        if (this.localGame.getPlayerSpaceship().getHealth() > 0) {
+            for (var x = 0; x < this.localGame.getPlayerSpaceship().getProjectiles().length; x++) {
+                this.localGame.getPlayerSpaceship().getProjectiles()[x].render(ctx);
+                this.localGame.getPlayerSpaceship().getProjectiles()[x].move(ctx);
+            }
         }
 
-        for (var y = 0; y < this.localGame.getOpponenetSpaceship().getProjectiles().length; y++) {
-            this.localGame.getOpponenetSpaceship().getProjectiles()[y].render(ctx);
-            this.localGame.getOpponenetSpaceship().getProjectiles()[y].move(ctx);
+        //renders the opponenets projectiles if alive
+        if (this.localGame.getOpponenetSpaceship().getHealth() > 0) {
+            for (var y = 0; y < this.localGame.getOpponenetSpaceship().getProjectiles().length; y++) {
+                this.localGame.getOpponenetSpaceship().getProjectiles()[y].render(ctx);
+                this.localGame.getOpponenetSpaceship().getProjectiles()[y].move(ctx);
+            }
         }
-
     }
 
     //This is used to capture events driven by the players
@@ -220,7 +226,7 @@
         var asteroids = this.localGame.getAsteroidsArr();
 
         if ((playerShip.getHealth() <= 0 && oppShip.getHealth() <= 0) || this.localGame.getLevel() === 4) {
-           
+
             cancelAnimationFrame(main);
 
             this.modifyCanvas(this.canvas, "score screen");
@@ -234,7 +240,7 @@
                 lobbyID: this.player.getLobbyID()
             });
 
-            document.addEventListener('spaceBar', kClick);
+            document.addEventListener('keypress', kClick);
 
         }
 
@@ -331,62 +337,70 @@
         }
 
         //loop over all asteroids and check if the distance between them and the player is close enough for a collision. aabb scenario.
-        for (var x = 0; x < asteroids.length; x++) {
-            if (playerShip.getX() < asteroids[x].getX() + asteroids[x].getSize() &&
-                playerShip.getX() + playerShip.getSide() > asteroids[x].getX() &&
-                playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
-                playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
+        if (playerShip.getHealth() > 0) {
+            for (var x = 0; x < asteroids.length; x++) {
+                if (playerShip.getX() < asteroids[x].getX() + asteroids[x].getSize() &&
+                    playerShip.getX() + playerShip.getSide() > asteroids[x].getX() &&
+                    playerShip.getY() < asteroids[x].getY() + asteroids[x].getSize() &&
+                    playerShip.getSide() + playerShip.getY() > asteroids[x].getY()) {
 
-                if (playerShip.getProtection() !== true) {
-                    //notify the server that a player has been hit.
-                    socket.emit('playerHitByAsteroid', {
-                        lobbyID: this.player.getLobbyID(),
-                        playerID: this.player.getId()
-                    });
+                    if (playerShip.getProtection() !== true) {
+                        //notify the server that a player has been hit.
+                        socket.emit('playerHitByAsteroid', {
+                            lobbyID: this.player.getLobbyID(),
+                            playerID: this.player.getId()
+                        });
 
-                    playerShip.decreaseHealth();
+                        playerShip.decreaseHealth();
 
-                    this.localGame.getPlayerSpaceship().setProtection(true);
+                        this.localGame.getPlayerSpaceship().setProtection(true);
 
-                    //changes the vunerablity back on.
-                    changeProtection(this.localGame.getPlayerSpaceship());
+                        //changes the vunerablity back on.
+                        changeProtection(this.localGame.getPlayerSpaceship());
+                    }
+
                 }
-               
             }
         }
 
         var bullets = playerShip.getProjectiles();
 
+        //loop over all asteroids and check if a collision is possible.
         for (var x = 0; x < asteroids.length; x++) {
             for (var i = 0; i < bullets.length ; i++) {
-                if (asteroids[x].getX() < bullets[i].getX() + bullets[i].getWidth() &&
-                    asteroids[x].getX() + asteroids[x].getSize() > bullets[i].getX() &&
-                    asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
-                    asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
+                if (typeof asteroids[x] !== 'undefined' && typeof bullets[i] !== 'undefined') {
+                    if (asteroids[x].getX() < bullets[i].getX() + bullets[i].getWidth() &&
+                        asteroids[x].getX() + asteroids[x].getSize() > bullets[i].getX() &&
+                        asteroids[x].getY() < bullets[i].getY() + bullets[i].getHeight() &&
+                        asteroids[x].getSize() + asteroids[x].getY() > bullets[i].getY()) {
 
-                    socket.emit('asteroidHitByPlayer', {
-                        lobbyID: this.player.getLobbyID(),
-                        asteroidID: x,
-                        bulletID: i,
-                        cords: [asteroids[x].getX(), asteroids[x].getY()],
-                        tier: asteroids[x].getTier()
-                    });
+                        socket.emit('asteroidHitByPlayer', {
+                            lobbyID: this.player.getLobbyID(),
+                            asteroidID: x,
+                            bulletID: i,
+                            cords: [asteroids[x].getX(), asteroids[x].getY()],
+                            tier: asteroids[x].getTier()
+                        });
 
-                    this.localGame.addPlayerScore();
-                    asteroids.splice(x, 1);
-                    bullets.splice(i, 1);
+                        this.localGame.addPlayerScore();
+                        asteroids.splice(x, 1);
+                        bullets.splice(i, 1);
 
 
+                    }
                 }
             }
         }
 
+
+        //removes projectiles when they run outside of the canvas
         for (var x = 0; x < playerShip.getProjectiles().length; x++) {
             if (playerShip.getProjectiles()[x].getX() <= 0 || playerShip.getProjectiles()[x].getX() >= this.width || playerShip.getProjectiles()[x].getY() <= 0 || playerShip.getProjectiles()[x].getY() >= this.height) {
                 playerShip.getProjectiles().splice(x, 1);
             }
         }
 
+        //Removes opponenets projectiles when they leave the canvas
         for (var x = 0; x < oppShip.getProjectiles().length; x++) {
             if (oppShip.getProjectiles()[x].getX() <= 0 || oppShip.getProjectiles()[x].getX() >= this.width || oppShip.getProjectiles()[x].getY() <= 0 || oppShip.getProjectiles()[x].getY() >= this.height) {
                 oppShip.getProjectiles().splice(x, 1);
@@ -413,12 +427,14 @@
         setTimeout(function () { playerSpacehsip.setProtection(false); }, 2000);
     }
 
-    function kClick (event) {
-        if(event.keyCode == 75) {
+    function kClick(event) {
+        if (event.keyCode == 107) {
+
+            console.log("rendering back to the lobby");
+
             socket.emit('playerHasLeftScoreScreen', {
 
             });
         }
     }
-
 }
