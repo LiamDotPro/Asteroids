@@ -58,6 +58,7 @@
 
     }
 
+    //Initally builds the canvas.
     this.buildCanvas = function (width, height, zIndex, backgroundColourRgba) {
         var canvas = document.createElement('canvas');
         canvas.width = width;
@@ -423,10 +424,12 @@
 
     }
 
+    //funciton that is used to give a player protection when they are hit, has a 2 second delay.
     function changeProtection(playerSpacehsip) {
         setTimeout(function () { playerSpacehsip.setProtection(false); }, 2000);
     }
 
+    //function used to exit the score screen, implemented via a event listener
     function kClick(event) {
         if (event.keyCode == 107) {
 

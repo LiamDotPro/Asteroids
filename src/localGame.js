@@ -76,6 +76,11 @@
         return this.loc;
     }
 
+    //gets the current direciton of the spaceship
+    this.getDirection = function () {
+        return this.direction;
+    }
+
     //gets the array of projectiles associated with this spaceship
     this.getProjectiles = function () {
         return this.projectiles;
@@ -84,7 +89,7 @@
 
     //set methods
     this.setHealth = function (newHp) {
-        this.health = hp;
+        this.health = newHp;
     }
 
     //decreases the health of the spaceship
@@ -131,6 +136,7 @@
         }
     }
 
+    //sets the protection for the spaceship
     this.setProtection = function (bool) {
         this.protection = bool;
     }
@@ -167,9 +173,8 @@
         this.x = loc[0];
         this.y = loc[1];
         this.loc = loc;
-        this.health = 100;
-        this.shield = 100;
-        this.thrusterSpeed = 20;
+        this.health = 3;
+        this.thrusterSpeed = 4;
     }
 
 
@@ -272,6 +277,10 @@ function Projectile(x, y, dir) {
 
     this.getY = function () {
         return this.y;
+    }
+
+    this.getDir = function () {
+        return this.direction;
     }
 
     this.getWidth = function () {

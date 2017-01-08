@@ -376,22 +376,27 @@ io.on('connection', function (socket) {
         }
     });
 
+    //triggered when your opponenet moves forward
     socket.on('opponenentMovedForward', function (data) {
         socket.broadcast.to(data.lobbyID).emit("moveOpponenetForward", {});
     });
 
+    //triggered when your opponenet moves left
     socket.on('opponenentMovedLeft', function (data) {
         socket.broadcast.to(data.lobbyID).emit("moveOpponenetLeft", {});
     });
 
+    //triggered when your opponenet moves right
     socket.on('opponenentMovedRight', function (data) {
         socket.broadcast.to(data.lobbyID).emit("moveOpponenetRight", {});
     });
 
+    //triggered when your opponenet shoots
     socket.on('playerShot', function (data) {
         socket.broadcast.to(data.lobbyID).emit("opponentShoot", {});
     });
 
+    //triggered when an asteroid is hit by a player.
     socket.on('asteroidHitByPlayer', function (data) {
 
         socket.broadcast.to(data.lobbyID).emit("removeBulletAndAsteroid", {
@@ -450,6 +455,7 @@ io.on('connection', function (socket) {
         }
     });
 
+    //triggered when a player is hit by an asteroid
     socket.on('playerHitByAsteroid', function (data) {
         socket.broadcast.to(data.lobbyID).emit("opponentHit", {});
         function sendVunerable() {
