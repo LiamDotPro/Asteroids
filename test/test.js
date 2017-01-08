@@ -534,13 +534,13 @@ describe("Checking starting locations and defaults", function () {
 
         it("Getting Height", function () {
             expect(projectiles[0].getHeight()).to.equal(15);
-        })
+        });
 
     });
 
     describe("Testing reseting of the spaceship", function () {
         it("This should reset the spaceship using the reset method", function () {
-            testShip.resetShip(0,0);
+            testShip.resetShip([0, 0]);
             expect(testShip.getX()).to.equal(0);
             expect(testShip.getY()).to.equal(0);
             expect(testShip.getThrusterSpeed()).to.equal(4);
@@ -549,11 +549,5 @@ describe("Checking starting locations and defaults", function () {
         })
 
     });
-
-    
-
-
-
-
 
 });
