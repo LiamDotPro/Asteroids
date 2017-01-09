@@ -12,8 +12,10 @@
     "url": "https://github.com/LiamDotPro/Asteroids.git"
   },
   "scripts": {
+    "start": "node server.js",
     "lint": "xo",
-    "test": "nyc mocha -R spec"
+    "test": "nyc mocha -R spec",
+    "deploy": "now"
   },
   "xo": {
     "envs": [
@@ -29,6 +31,7 @@
     "chai": "^3.5.0",
     "codecov": "^1.0.1",
     "mocha": "^3.0.0-2",
+    "now": "^1.0.0",
     "nyc": "^10.0.0",
     "xo": "^0.17.1"
   }
