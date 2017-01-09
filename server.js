@@ -1,4 +1,6 @@
-﻿var express = require('express');
+var os = require('os');
+var R = require('ramda');
+var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -23,7 +25,29 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/public/index.html');
 });
 
-http.listen(80);
+http.listen(80, () => {
+  'use strict';
+
+  const addresses = networkInterfaces => R.pipe(
+    R.props(R.keys(networkInterfaces)),
+    R.flatten
+  )(networkInterfaces)
+
+  const isInternal = address => address.internal
+  const isIpv4 = address => address.family === 'IPv4'
+  const isExternalIpv4 = R.both(R.complement(isInternal), isIpv4)
+
+  const hosts = R.pipe(
+    addresses,
+    R.filter(isExternalIpv4),
+    R.map(R.prop('address')),
+    R.concat(['127.0.0.1']),
+    R.map(address => `http://${address}`),
+    R.join(', ')
+  )(os.networkInterfaces())
+
+  console.log(`Server available at: ${hosts}.`)
+});
 
 io.on('connection', function (socket) {
     //when a new user connects assign and log all client id's
