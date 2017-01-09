@@ -218,7 +218,7 @@ var Spaceship = function (x, y) {
     //render methods
 
     this.renderSpaceShip = function (ctx) {
-
+         
         var side = this.side;
 
         var h = side * (Math.sqrt(3) / 2);
