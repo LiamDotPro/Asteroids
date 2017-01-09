@@ -153,20 +153,6 @@
         console.log('x: ' + this.x + " y: " + this.y);
     }
 
-    this.logControls = function () {
-        console.log("up: " + this.forward + ", left: " + this.left + ", right: " + this.right + ", Shield: " + this.down);
-    }
-
-    this.logShipStatus = function () {
-        if (this.shield == 100) {
-            console.log("Ship has maximum shield");
-        } else if (this.shield > 50) {
-            console.log("ship has more than 50% shield");
-        } else {
-            console.log("ship has less than 50% shield");
-        }
-    }
-
     //reset ship
 
     this.resetShip = function (loc) {

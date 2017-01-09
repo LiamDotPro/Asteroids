@@ -225,6 +225,26 @@ describe("Checking starting locations and defaults", function () {
 
     });
 
+    describe("Checking the ability to move a projectile", function () {
+
+        var projectiles = testShip.getProjectiles();
+
+        it("Checking that calling move moves the projectiles X value", function () {
+
+            //Moving the object 20 times
+            for (var y = 0; y < 19; y++) {
+                projectiles[60].move();
+            }
+
+            //This should be the same as the triangle starts facing upwards
+            expect(projectiles[60].getX()).to.equal(1000);
+        });
+
+        it("Checking that calling move moves the projectiles Y value", function () {
+            expect(projectiles[60].getY()).to.equal(119);
+        });
+    });
+
     describe("Testing the avalibility of projectile variables", function () {
 
         //uses the above test projectile that is created using the shoot method and tests the avalibity of varaibles - Uses first and only instance
@@ -314,6 +334,45 @@ describe("Checking starting locations and defaults", function () {
         
     });
 
- 
+    describe("Checking set location using function is functioning correctly", function () {
+        it("Checking passing X", function () {
+            testShip.setLocation(300, 488);
+            expect(testShip.getX()).to.equal(300);
+        });
+
+        it("Checking passing Y", function () {
+            expect(testShip.getY()).to.equal(488);
+        });
+    });
+
+    describe("", function () {
+        it("", function () {
+
+        });
+    });
+
+    describe("", function () {
+        it("", function () {
+
+        });
+    });
+
+    describe("", function () {
+        it("", function () {
+
+        });
+    });
+
+    describe("", function () {
+        it("", function () {
+
+        });
+    });
+
+    describe("", function () {
+        it("", function () {
+
+        });
+    });
 
 });
