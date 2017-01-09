@@ -3,7 +3,7 @@ var Client = function (id, socket) {
     this.id = id;
     this.lobbyStatus = false;
     this.lobbyNum = 0;
-    this.currentSocketRoom;
+    this.currentSocketRoom = null;
     this.clientLocation = "";
     this.clientSocket = socket;
     this.logging = true;
@@ -36,7 +36,9 @@ var Client = function (id, socket) {
 
     //handshake method for testing code reachability
     this.handshakeClient = function () {
-        presentMsg("Svr -> Client: " + this.id + " Is reachable");
+        if (this.logging) {
+           presentMsg("Svr -> Client: " + this.id + " Is reachable");
+        }
     }
 
     //set the lobby number if connected

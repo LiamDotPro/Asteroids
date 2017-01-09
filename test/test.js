@@ -495,10 +495,17 @@ describe("Serverside Resources", function () {
 
     describe("Client Test Libary", function () {
 
+        //These tests turn off logging for the class so messages don't appear on the report
+        //but are left on by default for the program.
         describe("Turning off logging for testing", function () {
 
-            if ("Logging value should be false", function () {
+            it("Logging value should be true", function () {
                 expect(testClient.getLogging()).to.be.ok;
+            });
+
+            it("Logging value should be false", function () {
+                testClient.setLogging(false);
+                expect(testClient.getLogging()).to.not.be.ok;
             });
         });
 
@@ -510,7 +517,7 @@ describe("Serverside Resources", function () {
 
         describe("Checking Socket is assigned", function () {
             it("Should return an array with multiple entires", function () {
-                expect(testClient.getClientSocket()).to.deep.equal([1,2]);
+                expect(testClient.getClientSocket()).to.deep.equal([1, 2]);
             });
         });
 
@@ -525,6 +532,27 @@ describe("Serverside Resources", function () {
             });
         });
 
+        describe("Checking inital lobby number", function () {
+            it("The inital value should be 0", function () {
+                expect(testClient.getLobbyNum()).to.equal(0);
+            });
+
+            it("The inital value should be 1234", function () {
+                testClient.setLobbyNum(1234);
+                expect(testClient.getLobbyNum()).to.equal(1234);
+            });
+        });
+
+        describe("checking assigning client room", function () {
+            it("Inital value should be null", function () {
+                expect(testClient.getClientRoom()).to.equal(null);
+            });
+
+            it("Assigning a lobby and getting the identifer", function () {
+                testClient.setClientRoom([]);
+                expect(testClient.getClientRoom()).to.deep.equal([]);
+            });
+        });
 
     });
 });

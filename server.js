@@ -1,10 +1,10 @@
-var os = require('os');
+﻿var os = require('os');
 var R = require('ramda');
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
- 
+
 //loading server side modules
 var Client = require('./src/Client.js');
 var Game = require('./src/Game.js');
@@ -26,24 +26,24 @@ app.get('/', function (req, res) {
 });
 
 http.listen(80, () => {
-  // Log available hosts for the server, based on external addresses.
-  'use strict';
+    // Log available hosts for the server, based on external addresses.
+    'use strict';
 
-  const isInternal = address => address.internal
-  const isIpv4 = address => address.family === 'IPv4'
-  const isExternalIpv4 = R.both(R.complement(isInternal), isIpv4)
+    const isInternal = address => address.internal
+    const isIpv4 = address => address.family === 'IPv4'
+    const isExternalIpv4 = R.both(R.complement(isInternal), isIpv4)
 
-  const urls = networkInterfaces => R.pipe(
-    R.props(R.keys(networkInterfaces)),
-    R.flatten(),
-    R.filter(isExternalIpv4),
-    R.map(R.prop('address')),
-    R.concat(['127.0.0.1', os.hostname()]),
-    R.map(address => `http://${address}`),
-    R.join(', ')
-  )(networkInterfaces);
+    const urls = networkInterfaces => R.pipe(
+      R.props(R.keys(networkInterfaces)),
+      R.flatten(),
+      R.filter(isExternalIpv4),
+      R.map(R.prop('address')),
+      R.concat(['127.0.0.1', os.hostname()]),
+      R.map(address => `http://${address}`),
+      R.join(', ')
+    )(networkInterfaces);
 
-  console.log(`Server available at: ${urls(os.networkInterfaces())}.`)
+    console.log(`Server available at: ${urls(os.networkInterfaces())}.`)
 });
 
 io.on('connection', function (socket) {
@@ -251,7 +251,9 @@ io.on('connection', function (socket) {
         var lobbyArr = [];
 
         lobbys.forEach(function (element) {
-            lobbyArr.push([element.getLobbyID(), element.checkPlayer2()]);
+            if (element.getLobbyStatus() === "InLobby") {
+                lobbyArr.push([element.getLobbyID(), element.checkPlayer2()]);
+            }
         });
 
         //finds all of the open lobbies currently on the sever
@@ -322,7 +324,11 @@ io.on('connection', function (socket) {
             you: [640, 400],
             other: [640, 200],
             asteroids: asteroids
-        })
+        });
+
+        io.emit("gameStartedRemoveLobby", {
+            lobbyID: selectedLobby.getLobbyID()
+        });
 
 
     });

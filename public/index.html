@@ -429,6 +429,11 @@
             cancelAnimationFrame(loopRef);
         });
 
+        socket.on("gameStartedRemoveLobby", function (data) {
+            $("#" + data.lobbyID).remove();
+            console.log("made it!" + data.lobbyID);
+        });
+
         //helper methods and event functions
 
         //key up event for use with event listener
