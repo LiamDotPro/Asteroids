@@ -5,6 +5,7 @@ var Spaceship = require('../src/SrvSpaceship.js');
 var Projectile = require('../src/SrvProjectile.js');
 var Asteroid = require('../src/SrvAsteroid.js');
 var Client = require('../src/Client.js');
+var Game = require('../src/Game.js');
 
 //making the objects we wish to test below
 var testShip = new Spaceship(0, 0);
@@ -554,5 +555,15 @@ describe("Serverside Resources", function () {
             });
         });
 
+    });
+
+    var testGame = new Game(12333, null);
+
+    describe("Game Test Libary", function () {
+        describe("Checking Game ID", function () {
+            it("Should return the passed value on startup", function () {
+                expect(testGame.getLobbyID()).to.equal(12333);
+            });
+        });
     });
 });
