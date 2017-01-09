@@ -6,6 +6,7 @@ var Client = function (id, socket) {
     this.currentSocketRoom;
     this.clientLocation = "";
     this.clientSocket = socket;
+    this.logging = true;
 
     //gets the status of the lobby
     this.getLobbyStatus = function () {
@@ -19,18 +20,23 @@ var Client = function (id, socket) {
     //gets the clients id
     this.getId = function () {
         return this.id;
+    }
 
+    //get client location
+    this.getClientLoc = function () {
+        return this.clientLocation;
     }
 
     //sets the location of the client within the game, menu and lobbies
     this.setLocation = function (newLoc) {
         this.clientLocation = newLoc;
-        console.log("Srv <- Client " + this.id + " Location updated");
+        if (this.logging) { presentMsg("Srv <- Client " + this.id + " Location updated"); }
+
     }
 
     //handshake method for testing code reachability
     this.handshakeClient = function () {
-        console.log("Svr -> Client: " + this.id + " Is reachable");
+        presentMsg("Svr -> Client: " + this.id + " Is reachable");
     }
 
     //set the lobby number if connected
@@ -56,6 +62,22 @@ var Client = function (id, socket) {
     //gets the clients socket
     this.getClientSocket = function () {
         return this.clientSocket
+    }
+
+    //sets a value so logging can be presented based on bool
+    this.setLogging = function (value) {
+        this.logging = value;
+    }
+
+    //gets the current logging value
+    this.getLogging = function () {
+        return this.logging;
+    }
+
+    //presents a message to the server
+    function presentMsg(msg) {
+        console.log(msg);
+        return true;
     }
 
 }
