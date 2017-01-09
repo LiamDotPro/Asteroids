@@ -656,7 +656,6 @@ describe("Serverside Resources", function () {
         describe("Testing creation of UUID", function () {
             it("should return a UUID", function () {
                 testUUID.generateUUID();
-                
                 expect(testUUID).to.not.equal(0);
             });
         });
