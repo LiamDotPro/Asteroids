@@ -2,59 +2,12 @@
 var expect = require("chai").expect;
 
 var Spaceship = require('../src/SrvSpaceship.js');
-
 var Projectile = require('../src/SrvProjectile.js');
 
 //making the objects we wish to test below
 var testShip = new Spaceship(0, 0);
-
-function Asteroid(x, y, size, dir, tier) {
-    this.x = x;
-    this.y = y;
-    this.size = size;
-    this.direction = dir;
-    this.speed = 2;
-    this.tier = tier;
-
-
-    this.renderAsteroid = function (ctx) {
-        ctx.strokeStyle = "white";
-
-        //build asteroid here
-        ctx.strokeRect(this.x, this.y, this.size, this.size);
-
-    }
-
-    this.move = function () {
-        this.x += this.speed * Math.cos(this.direction);
-        this.y += this.speed * Math.sin(this.direction);
-    }
-
-    this.getX = function () {
-        return this.x;
-    }
-
-    this.getY = function () {
-        return this.y;
-    }
-
-    this.getSize = function () {
-        return this.size;
-    }
-
-    this.setX = function (newX) {
-        this.x = newX;
-    }
-
-    this.setY = function (newY) {
-        this.y = newY;
-    }
-
-    this.getTier = function () {
-        return this.tier;
-    }
-
-}
+var moveShip = new Spaceship(0, 0);
+var testProjectile = new Projectile(10, 20, 4.6);
 
 
 function localGame(StartingLocationPlayer, StartingLocationOpp) {
@@ -234,9 +187,14 @@ describe("Checking starting locations and defaults", function () {
 
     });
 
-    describe("Checking starting thruster speed", function () {
+    describe("Checking starting thruster speed and changing", function () {
         it("Thruster speed should be equal to 4", function () {
             expect(testShip.getThrusterSpeed()).to.equal(4);
+        });
+
+        it("Thruster speed should be equal to 8", function () {
+            testShip.setThrusterSpeed(8);
+            expect(testShip.getThrusterSpeed()).to.equal(8);
         });
     });
 
@@ -255,6 +213,14 @@ describe("Checking starting locations and defaults", function () {
             testShip.shoot();
             var len = testShip.getProjectiles().length;
             expect(len).to.equal(1);
+        });
+
+        it("Shooting array has reached it's limit", function () {
+            for (var x = 0; x < 100; x++) {
+                testShip.shoot();
+            }
+
+            expect(testShip.shoot()).to.not.be.ok;
         });
 
     });
@@ -294,9 +260,60 @@ describe("Checking starting locations and defaults", function () {
             expect(testShip.getY()).to.equal(0);
             expect(testShip.getThrusterSpeed()).to.equal(4);
             expect(testShip.getHealth()).to.equal(3);
-            expect(testShip.getLoc()).to.deep.equal([0,0]);
+            expect(testShip.getLoc()).to.deep.equal([0, 0]);
         })
 
     });
+
+    describe("Testing movement of spaceship", function () {
+
+        //Moving moveShip forward
+        moveShip.forwardMove();
+
+
+        it("X should be inline with a default direction turn with COS", function () {
+            expect(moveShip.getX()).to.equal(-7.347880794884119e-16);
+        });
+
+        it("Y should be inline with a default direction turn with SIN", function () {
+            expect(moveShip.getY()).to.equal(-4);
+        });
+
+    });
+
+    describe("Testing the avalibity of getting the side number used for sizing", function () {
+        it("Default side value for player size should be 40", function () {
+            expect(testShip.getSide()).to.equal(40);
+        });
+    });
+
+    describe("Testing turning left and right with the moveShip", function () {
+        it("Direction should be changed to -0.1 of the current position", function () {
+            //turning the ship right
+            moveShip.turnRight();
+            expect(moveShip.getDirection()).to.equal(4.812388980384689);
+        });
+
+        it("Direction should be changed to +0.1 of the current position", function () {
+            //turning the ship left
+            moveShip.turnLeft();
+            expect(moveShip.getDirection()).to.equal(4.71238898038469);
+        });
+    });
+
+    describe("Checking if shield is activatable", function () {
+        it("Shield should be false", function () {
+            expect(testShip.getShield()).to.not.be.ok;
+        });
+
+
+        it("Shield should be true", function () {
+            testShip.setShield();
+            expect(testShip.getShield()).to.be.ok;
+        });
+        
+    });
+
+ 
 
 });

@@ -62,6 +62,9 @@ var Spaceship = function (x, y) {
     //The direction the spaceship is heading
     this.direction = 3 * Math.PI / 2;
 
+    //The shield activated when pressing down
+    this.sheild = false;
+
     //methods
 
     //get methods
@@ -87,6 +90,11 @@ var Spaceship = function (x, y) {
     //gets the side value for the spaceship
     this.getSide = function () {
         return this.side;
+    }
+
+    //gets the current state of the shield
+    this.getShield = function () {
+        return this.sheild;
     }
 
     //gets the thruster speed
@@ -136,8 +144,8 @@ var Spaceship = function (x, y) {
     }
 
     //Sets the shield for the ship - not implemeted
-    this.setShield = function (newShield) {
-        this.shield = newShield;
+    this.setShield = function () {
+        this.sheild ? this.sheild = false : this.sheild = true;
     }
 
     //sets the a new X axis
@@ -186,23 +194,12 @@ var Spaceship = function (x, y) {
 
     //log methods
 
-    this.logCordinates = function () {
-        console.log('x: ' + this.x + " y: " + this.y);
-    }
+    // Below methods are live in the program files but Can't be tested due to framework and testing
+    // via server side modules.
 
-    this.logControls = function () {
-        console.log("up: " + this.forward + ", left: " + this.left + ", right: " + this.right + ", Shield: " + this.down);
-    }
-
-    this.logShipStatus = function () {
-        if (this.shield == 100) {
-            console.log("Ship has maximum shield");
-        } else if (this.shield > 50) {
-            console.log("ship has more than 50% shield");
-        } else {
-            console.log("ship has less than 50% shield");
-        }
-    }
+    //this.logCordinates = function () {
+    //   console.log('x: ' + this.x + " y: " + this.y);
+    //}
 
     //reset ship
 
@@ -218,7 +215,7 @@ var Spaceship = function (x, y) {
     //render methods
 
     this.renderSpaceShip = function (ctx) {
-         
+
         var side = this.side;
 
         var h = side * (Math.sqrt(3) / 2);
