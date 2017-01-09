@@ -2,6 +2,7 @@
 var expect = require("chai").expect;
 
 var Spaceship = require('../src/SrvSpaceship.js');
+
 var Projectile = require('../src/SrvProjectile.js');
 
 //making the objects we wish to test below
