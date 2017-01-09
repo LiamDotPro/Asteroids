@@ -26,27 +26,24 @@ app.get('/', function (req, res) {
 });
 
 http.listen(80, () => {
+  // Log available hosts for the server, based on external addresses.
   'use strict';
-
-  const addresses = networkInterfaces => R.pipe(
-    R.props(R.keys(networkInterfaces)),
-    R.flatten
-  )(networkInterfaces)
 
   const isInternal = address => address.internal
   const isIpv4 = address => address.family === 'IPv4'
   const isExternalIpv4 = R.both(R.complement(isInternal), isIpv4)
 
-  const hosts = R.pipe(
-    addresses,
+  const urls = networkInterfaces => R.pipe(
+    R.props(R.keys(networkInterfaces)),
+    R.flatten(),
     R.filter(isExternalIpv4),
     R.map(R.prop('address')),
-    R.concat(['127.0.0.1']),
+    R.concat(['127.0.0.1', os.hostname()]),
     R.map(address => `http://${address}`),
     R.join(', ')
-  )(os.networkInterfaces())
+  )(networkInterfaces);
 
-  console.log(`Server available at: ${hosts}.`)
+  console.log(`Server available at: ${urls(os.networkInterfaces())}.`)
 });
 
 io.on('connection', function (socket) {
