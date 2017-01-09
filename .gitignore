@@ -215,5 +215,6 @@ pip-log.txt
 #Mr Developer
 .mr.developer.cfg
 
+.nyc_output/
 coverage/
 /node_modules/
