@@ -6,6 +6,7 @@ var Projectile = require('../src/SrvProjectile.js');
 var Asteroid = require('../src/SrvAsteroid.js');
 var Client = require('../src/Client.js');
 var Game = require('../src/Game.js');
+var UUID = require('../src/UUID.js');
 
 //making the objects we wish to test below
 var testShip = new Spaceship(0, 0);
@@ -646,6 +647,18 @@ describe("Serverside Resources", function () {
                 expect(testGame.getPlayerReadStatus()).to.equal(false);
             });
 
+        });
+    });
+
+    var testUUID = new UUID();
+
+    describe("UUID Test Libary", function () {
+        describe("Testing creation of UUID", function () {
+            it("should return a UUID", function () {
+                testUUID.generateUUID();
+                
+                expect(testUUID).to.not.equal(0);
+            });
         });
     });
 });
