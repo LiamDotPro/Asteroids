@@ -557,13 +557,95 @@ describe("Serverside Resources", function () {
 
     });
 
-    var testGame = new Game(12333, null);
+    var testGame = new Game(12333, "u1u2u3");
 
     describe("Game Test Libary", function () {
         describe("Checking Game ID", function () {
             it("Should return the passed value on startup", function () {
                 expect(testGame.getLobbyID()).to.equal(12333);
             });
+        });
+
+        describe("getting and setting of Player ID's", function () {
+            it("Should return the inital user id for player 1", function () {
+                expect(testGame.getPlayer1ID()).to.equal("u1u2u3");
+            });
+
+            it("Should return empty string when no second user is present", function () {
+                expect(testGame.getPlayer2ID()).to.equal("");
+            });
+
+            it("Should return an updated string when a second user is present", function () {
+                testGame.setPlayer2("u3u3u3");
+                expect(testGame.getPlayer2ID()).to.equal("u3u3u3");
+            });
+        });
+
+        describe("Creating serverside representation of spaceships", function () {
+            it("Should create spaceships inside the class", function () {
+                testGame.createPlayerSpaceship(new Spaceship(0, 0), new Spaceship(0, 0));
+                expect(testGame.getSpaceShipP1()).to.not.be.null;
+                expect(testGame.getSpaceShipP2()).to.not.be.null;
+            });
+        });
+
+        describe("Checking for a second player in a game", function () {
+            it("Should return 2 as a second player is present", function () {
+                expect(testGame.checkPlayer2()).to.equal(2);
+            });
+
+            it("Should return 1 when a second player is not present", function () {
+                testGame.setPlayer2("");
+                expect(testGame.checkPlayer2()).to.equal(1);
+            });
+        });
+
+        describe("Checking inital lobby status and changing status", function () {
+
+            it("Inital state of the lobby should be InLobby", function () {
+                expect(testGame.getLobbyStatus()).to.equal("InLobby");
+            });
+
+            it("Checking if lobby is now Playing", function () {
+                testGame.setLobbyStatus("Playing");
+                expect(testGame.getLobbyStatus()).to.equal("Playing");
+            });
+
+        });
+
+        describe("checking setting player status in lobby", function () {
+
+            it("Player 1 status should return false initally", function () {
+                expect(testGame.getPlayerStatus("u1u2u3")).to.equal(false);
+            });
+
+            it("Player 1 status should return true after change", function () {
+                testGame.setPlayerStatus("u1u2u3");
+                expect(testGame.getPlayerStatus("u1u2u3")).to.equal(true);
+            });
+
+            it("Player 2 status should return false initally", function () {
+                testGame.setPlayer2("y2y2y2");
+                expect(testGame.getPlayerStatus("y2y2y2")).to.equal(false);
+            });
+
+            it("Player 2 status should return true after change", function () {
+                testGame.setPlayerStatus("y2y2y2");
+                expect(testGame.getPlayerStatus("y2y2y2")).to.equal(true);
+            });
+        });
+
+        //This is used when attempting to start a game
+        describe("Checking both players ready up status", function () {
+            it("Should return true for both players", function () {
+                expect(testGame.getPlayerReadStatus()).to.equal(true);
+            });
+
+            it("Should return false for both players", function () {
+                testGame.setPlayerStatus("y2y2y2");
+                expect(testGame.getPlayerReadStatus()).to.equal(false);
+            });
+
         });
     });
 });

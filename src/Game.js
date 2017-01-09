@@ -10,8 +10,8 @@
     this.player2ID = "";
 
     //spaceships
-    this.player1Spaceship;
-    this.player2Spaceship;
+    this.player1Spaceship = null;
+    this.player2Spaceship = null;
 
     //player status within game
     this.player1Status = false;
@@ -41,6 +41,16 @@
     this.createPlayerSpaceship = function (spaceshipP1, spaceshipP2) {
         this.player1Spaceship = spaceshipP1;
         this.player2Spaceship = spaceshipP2;
+    }
+
+    //gets player 1 spaceship object
+    this.getSpaceShipP1 = function () {
+        return this.player1Spaceship;
+    }
+
+    //gets player 2 spaceship object
+    this.getSpaceShipP2 = function () {
+        return this.player2Spaceship;
     }
 
     //finds if a second player is connected
