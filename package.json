@@ -13,7 +13,7 @@
   },
   "scripts": {
     "lint": "xo",
-    "test": "mocha",
+    "test": "istanbul cover mocha",
     "coverage": "istanbul cover node_modules/mocha/bin/_mocha"
   },
   "xo": {
