@@ -7,7 +7,7 @@ var Projectile = require('../src/SrvProjectile.js');
 //making the objects we wish to test below
 var testShip = new Spaceship(0, 0);
 var moveShip = new Spaceship(0, 0);
-var testProjectile = new Projectile(10, 20, 4.6);
+
 
 
 function localGame(StartingLocationPlayer, StartingLocationOpp) {
@@ -105,7 +105,7 @@ function localGame(StartingLocationPlayer, StartingLocationOpp) {
 }
 
 
-describe("Checking starting locations and defaults", function () {
+describe("Spaceship Test Libary and Projectile intergration tests", function () {
     describe("Checking starting location x and moving x", function () {
         it("X Should init as 0", function () {
             expect(testShip.getX()).to.equal(0);
@@ -344,35 +344,56 @@ describe("Checking starting locations and defaults", function () {
             expect(testShip.getY()).to.equal(488);
         });
     });
+});
 
-    describe("", function () {
-        it("", function () {
+var testProjectile = new Projectile(10, 20, 4.6);
 
+describe("Projectile Test Libary", function () {
+    
+    describe("Getting the X value", function () {
+        it("Should return 10", function () {
+            expect(testProjectile.getX()).to.equal(10);
         });
     });
 
-    describe("", function () {
-        it("", function () {
-
+    describe("Getting the Y value", function () {
+        it("Should return 20", function () {
+            expect(testProjectile.getY()).to.equal(20);
         });
     });
 
-    describe("", function () {
-        it("", function () {
-
+    describe("Getting the Width value", function () {
+        it("Should return default value", function () {
+            expect(testProjectile.getWidth()).to.equal(5);
         });
     });
 
-    describe("", function () {
-        it("", function () {
-
+    describe("Getting the Height value", function () {
+        it("Should return default value", function () {
+            expect(testProjectile.getHeight()).to.equal(15);
         });
     });
 
-    describe("", function () {
-        it("", function () {
-
+    describe("Getting the Direction", function () {
+        it("Should return 4.6", function () {
+            expect(testProjectile.getDir()).to.equal(4.6);
         });
     });
 
+    describe("Getting the Speed value", function () {
+        it("Should return 6", function () {
+            expect(testProjectile.getSpeed()).to.equal(6);
+        });
+    });
+
+    describe("Checking the movement of the produced projectile", function () {
+        it("X value should change in accordance to Cos", function () {
+            testProjectile.move();
+            expect(testProjectile.getX()).to.equal(9.32708483838967);
+        });
+
+        it("Y value should change in accordance to Sin", function () {
+            expect(testProjectile.getY()).to.equal(14.037853978199212);
+        });
+    });
 });
