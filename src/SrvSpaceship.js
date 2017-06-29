@@ -70,107 +70,107 @@ var Spaceship = function (x, y) {
     //get methods
     this.getHealth = function () {
         return this.health;
-    }
+    };
 
     //gets the protection status
     this.getProtection = function () {
         return this.protection;
-    }
+    };
 
     //gets the x status
     this.getX = function () {
         return this.x;
-    }
+    };
 
     //gets the Y status
     this.getY = function () {
         return this.y;
-    }
+    };
 
     //gets the side value for the spaceship
     this.getSide = function () {
         return this.side;
-    }
+    };
 
     //gets the current state of the shield
     this.getShield = function () {
         return this.sheild;
-    }
+    };
 
     //gets the thruster speed
     this.getThrusterSpeed = function () {
         return this.thrusterSpeed;
-    }
+    };
 
     //moves the spaceship forward uses * rather than + for smoother movement
     this.forwardMove = function () {
         this.x += this.thrusterSpeed * Math.cos(this.direction);
         this.y += this.thrusterSpeed * Math.sin(this.direction);
-    }
+    };
 
     //this will change the direction of the spaceship
     this.turnRight = function () {
         this.direction += 0.1;
-    }
+    };
 
 
     this.turnLeft = function () {
         this.direction += -0.1;
-    }
+    };
 
     //gets the current location of the spaceship
     this.getLoc = function () {
         return this.loc;
-    }
+    };
 
     //gets the current direciton of the spaceship
     this.getDirection = function () {
         return this.direction;
-    }
+    };
 
     //gets the array of projectiles associated with this spaceship
     this.getProjectiles = function () {
         return this.projectiles;
-    }
+    };
 
     //set methods
     this.setHealth = function (newHp) {
         this.health = newHp;
-    }
+    };
 
     //decreases the health of the spaceship
     this.decreaseHealth = function () {
         this.health -= 1;
-    }
+    };
 
     //Sets the shield for the ship - not implemeted
     this.setShield = function () {
         this.sheild ? this.sheild = false : this.sheild = true;
-    }
+    };
 
     //sets the a new X axis
     this.setX = function (newX) {
         this.x = newX;
         this.updateLoc();
-    }
+    };
 
     //sets a new Y axis
     this.setY = function (newY) {
         this.y = newY;
         this.updateLoc();
-    }
+    };
 
     //sets the thruster speed for the ship
     this.setThrusterSpeed = function (newSpeed) {
         this.thrusterSpeed = newSpeed;
-    }
+    };
 
     //sets the location array using x and y
     this.setLocation = function (x, y) {
         this.loc = [x, y];
         this.x = x;
         this.y = y;
-    }
+    };
 
     //Causes a new shot to be added
     this.shoot = function () {
@@ -180,17 +180,17 @@ var Spaceship = function (x, y) {
         } else {
             return false;
         }
-    }
+    };
 
     this.setProtection = function (bool) {
         this.protection = bool;
-    }
+    };
 
     //update methods
 
     this.updateLoc = function () {
         this.loc = [this.x, this.y];
-    }
+    };
 
     //log methods
 
@@ -209,7 +209,7 @@ var Spaceship = function (x, y) {
         this.loc = loc;
         this.health = 3;
         this.thrusterSpeed = 4;
-    }
+    };
 
 
     //render methods

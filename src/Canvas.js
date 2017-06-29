@@ -217,7 +217,7 @@
                 this.localGame.getOpponenetSpaceship().getProjectiles()[y].move(ctx);
             }
         }
-    }
+    };
 
     //This is used to capture events driven by the players
     this.update = function (keycodeArr) {

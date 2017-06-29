@@ -523,7 +523,5 @@ io.on('connection', function (socket) {
             lobbyID: data.lobbyID
         });
 
-        console.log("Server reached here");
-
     });
 });

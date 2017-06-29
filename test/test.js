@@ -1,5 +1,6 @@
 ﻿var assert = require('assert');
 var expect = require("chai").expect;
+var ineeda = require('ineeda').ineeda;
 
 var Spaceship = require('../src/SrvSpaceship.js');
 var Projectile = require('../src/SrvProjectile.js');
@@ -13,100 +14,17 @@ var testShip = new Spaceship(0, 0);
 var moveShip = new Spaceship(0, 0);
 
 
-
-function localGame(StartingLocationPlayer, StartingLocationOpp) {
-
-    this.asteroids = [];
-    this.levelScore = generateLevelScores();
-
-    this.playerSpaceship = new Spaceship(StartingLocationPlayer[0], StartingLocationPlayer[1]);
-    this.opponenetSpaceship = new Spaceship(StartingLocationOpp[0], StartingLocationOpp[1]);
-
-    this.playerScore = 0;
-    this.oppScore = 0;
-    this.level = 0;
+describe("mock test", function () {
+    describe("Testing Mock of SpaceShip and projectiles", function () {
+        it("should return a new mock of spaceship", function () {
+            var spaceship = ineeda({name: 'fred'});
+            console.log(spaceship);
+            expect(spaceship.name).to.equal('fred');
+        });
+    });
+});
 
 
-    this.getPlayerSpaceship = function () {
-        return this.playerSpaceship;
-    }
-
-    this.getOpponenetSpaceship = function () {
-        return this.opponenetSpaceship;
-    }
-
-    this.getPlayerScore = function () {
-        return this.playerScore;
-    }
-
-    this.getOppScore = function () {
-        return this.oppScore;
-    }
-
-    this.getAsteroidsArr = function () {
-        return this.asteroids;
-    }
-
-    this.addAsteroids = function (arrOfAsteroids) {
-        for (var i = 0; i < arrOfAsteroids.length; i++) {
-            var a = arrOfAsteroids[i];
-            //x, y, size, dir
-            this.asteroids.push(new Asteroid(a.loc[0], a.loc[1], a.size, a.dir, a.tier));
-            console.log(arrOfAsteroids);
-        }
-    }
-
-    this.renderScores = function (ctx, canvasObj) {
-        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Your Score:" + this.playerScore, 10, 40);
-        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Opponent Score:" + this.oppScore, 1050, 40);
-    }
-
-    this.renderLevel = function (ctx, canvasObj) {
-        canvasObj.createCanvasText(ctx, "20px Arial", "white", "Level " + this.level, 500, 40);
-    }
-
-    this.renderHealth = function (ctx, canvasObj) {
-        canvasObj.createCanvasText(ctx, "20px Arial", "white", "life: " + this.playerSpaceship.getHealth(), 10, 80);
-        canvasObj.createCanvasText(ctx, "20px Arial", "white", "life: " + this.opponenetSpaceship.getHealth(), 1050, 80);
-    }
-
-    this.addPlayerScore = function () {
-        this.playerScore += 10;
-    }
-
-    this.addOppScore = function () {
-        this.oppScore += 10;
-    }
-
-    this.increaseLevel = function () {
-        this.level++;
-    }
-
-    this.getLevel = function () {
-        return this.level;
-    }
-
-    this.getLevelScore = function () {
-        var score = this.levelScore[this.level];
-        if (score === (this.playerScore + this.oppScore)) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    function generateLevelScores() {
-        var tempArr = [];
-        var counter = 2;
-        for (var x = 0; x < 3; x++) {
-            tempArr.push(counter * 130);
-            counter = counter * 2;
-        }
-        console.log(tempArr);
-        return tempArr;
-    }
-
-}
 
 describe("Clientside Resources ", function () {
     describe("Spaceship Test Libary and Projectile intergration tests", function () {
